@@ -1041,3 +1041,231 @@ Next planned coverage:
 Checkout & Orders cases are currently **Not Run**. Actual results will be recorded during execution against the Demoblaze application.
 
 The next planned section will focus on **Negative & Boundary Scenarios** and will provide additional risk-based coverage beyond the primary customer workflows.
+
+
+# 7. Negative & Boundary Testing
+
+## TC-NEG-001 — Login with incorrect username and password
+
+| Field | Details |
+|---|---|
+| Feature | Login |
+| Priority | High |
+| Preconditions | Login dialog is available |
+| Test Data | Unregistered username and incorrect password |
+| Steps | 1. Open Log in. 2. Enter an invalid username. 3. Enter an invalid password. 4. Submit. |
+| Expected Result | Authentication fails and the application provides appropriate feedback. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-002 — Registration with duplicate username
+
+| Field | Details |
+|---|---|
+| Feature | Registration |
+| Priority | High |
+| Preconditions | A user account already exists with the test username |
+| Test Data | Existing username |
+| Steps | 1. Open Sign Up. 2. Enter the existing username. 3. Enter a password. 4. Submit. |
+| Expected Result | The application rejects the duplicate registration and provides appropriate feedback. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-003 — Registration with both fields blank
+
+| Field | Details |
+|---|---|
+| Feature | Registration |
+| Priority | High |
+| Preconditions | Sign Up dialog is open |
+| Test Data | Username: blank; Password: blank |
+| Steps | 1. Leave both fields blank. 2. Submit registration. |
+| Expected Result | Registration is not completed and the application handles the invalid submission appropriately. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-004 — Login with username containing leading/trailing spaces
+
+| Field | Details |
+|---|---|
+| Feature | Login |
+| Priority | Medium |
+| Preconditions | Login dialog is open |
+| Test Data | Username with leading/trailing whitespace |
+| Steps | 1. Enter the username with whitespace. 2. Enter the appropriate password. 3. Submit. |
+| Expected Result | The application handles whitespace according to its implemented authentication behavior. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-005 — Registration using an unusually long username
+
+| Field | Details |
+|---|---|
+| Feature | Registration |
+| Priority | Medium |
+| Preconditions | Sign Up dialog is open |
+| Test Data | Username longer than normal expected usage |
+| Steps | 1. Enter an unusually long username. 2. Enter a valid test password. 3. Submit. |
+| Expected Result | The application handles the input without breaking the interface or producing an unhandled error. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-006 — Product detail page after browser refresh
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | Medium |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Refresh the browser. |
+| Expected Result | The application reloads without an unexpected error and displays the expected page behavior. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-007 — Attempt checkout with an empty cart
+
+| Field | Details |
+|---|---|
+| Feature | Checkout / Cart |
+| Priority | High |
+| Preconditions | Cart contains no products |
+| Test Data | Empty cart |
+| Steps | 1. Open the Shopping Cart. 2. Attempt to proceed to checkout/order placement if the control is available. |
+| Expected Result | The application prevents an invalid empty-cart order or handles the action according to its implemented behavior without creating an unintended order. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-008 — Remove the only product from the cart
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | High |
+| Preconditions | Exactly one product is in the cart |
+| Test Data | One available product |
+| Steps | 1. Open Cart. 2. Delete the only product. |
+| Expected Result | The product is removed and the cart transitions to the appropriate empty-cart state. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-009 — Rapidly select Add to Cart
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Medium |
+| Preconditions | Product detail page is open |
+| Test Data | One available product |
+| Steps | 1. Select Add to Cart repeatedly in rapid succession. 2. Open the cart. |
+| Expected Result | The application handles repeated interaction without crashing or producing corrupted cart data. Actual duplicate behavior should be documented if observed. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-010 — Navigate rapidly between categories
+
+| Field | Details |
+|---|---|
+| Feature | Navigation / Categories |
+| Priority | Low |
+| Preconditions | Home page is loaded |
+| Test Data | Available product categories |
+| Steps | 1. Select one category. 2. Quickly select another category. 3. Repeat across available categories. |
+| Expected Result | The application remains responsive and displays a valid category state without an application error. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-011 — Refresh the cart during an active cart workflow
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Medium |
+| Preconditions | One or more products are in the cart |
+| Test Data | One or more products |
+| Steps | 1. Open Cart. 2. Refresh the browser. 3. Observe the cart. |
+| Expected Result | The resulting cart state is consistent with the application's implemented behavior and no unexpected error is displayed. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-012 — Checkout with invalid payment information
+
+| Field | Details |
+|---|---|
+| Feature | Checkout Validation |
+| Priority | High |
+| Preconditions | Checkout dialog is open |
+| Test Data | Invalid/nonconforming payment test value appropriate for the demo environment |
+| Steps | 1. Enter invalid payment information. 2. Complete other required fields. 3. Attempt to place the order. |
+| Expected Result | The application handles invalid payment information according to its implemented validation behavior and does not incorrectly process invalid data. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-013 — Checkout with unusually long customer input
+
+| Field | Details |
+|---|---|
+| Feature | Checkout Validation |
+| Priority | Medium |
+| Preconditions | Checkout dialog is open |
+| Test Data | Unusually long test values in applicable text fields |
+| Steps | 1. Enter unusually long values. 2. Complete remaining required fields. 3. Attempt to submit. |
+| Expected Result | The application handles the input without layout corruption, unexpected crashes, or unhandled errors. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-014 — Verify application behavior when navigating away from checkout
+
+| Field | Details |
+|---|---|
+| Feature | Checkout / Navigation |
+| Priority | Medium |
+| Preconditions | Checkout dialog is open and partially completed |
+| Test Data | Partial valid test information |
+| Steps | 1. Open checkout. 2. Enter partial information. 3. Navigate away or close the checkout dialog. 4. Return to the cart. |
+| Expected Result | No unintended order is submitted and the application returns to a consistent state. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NEG-015 — Verify no unintended order is created from incomplete checkout
+
+| Field | Details |
+|---|---|
+| Feature | Checkout |
+| Priority | Critical |
+| Preconditions | Product is in the cart |
+| Test Data | Incomplete checkout information |
+| Steps | 1. Open checkout. 2. Leave one or more required fields incomplete. 3. Attempt to submit. 4. Observe the result. |
+| Expected Result | An incomplete checkout does not result in an unintended successful order. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+---
+
+# Negative & Boundary Coverage Summary
+
+| Feature | Test Cases |
+|---|---:|
+| Negative & Boundary | 15 |
+| Previous Cases | 68 |
+| **Total Cases** | **83** |
+
+## Final Functional Test Suite Summary
+
+| Test Area | Cases |
+|---|---:|
+| Registration / Login | 15 |
+| Navigation / Categories | 12 |
+| Product Details | 12 |
+| Shopping Cart | 15 |
+| Checkout / Orders | 14 |
+| Negative / Boundary | 15 |
+| **TOTAL** | **83** |
+
+## Functional Test Suite Status
+
+**Current Status:** Test cases designed — execution pending.
+
+The 83 test cases provide coverage across the application's primary customer workflows, validation scenarios, negative scenarios, boundary conditions, and transaction flow.
+
+Execution results, defects, and retest results will be documented separately as testing is performed.
