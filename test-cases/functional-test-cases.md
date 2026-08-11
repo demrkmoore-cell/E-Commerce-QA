@@ -232,6 +232,25 @@ Each test case contains:
 | Actual Result | Not Run |
 | Status | Not Run |
 
+# Initial Coverage Summary
+
+| Feature | Test Cases |
+|---|---:|
+| Registration | 8 |
+| Login / Logout | 7 |
+| **Total** | **15** |
+
+## Execution Notes
+
+These cases are currently **Not Run**. Actual results will be recorded after execution against the Demoblaze application.
+
+Additional functional coverage will be added for:
+
+- Navigation and Categories
+- Product Details
+- Shopping Cart
+- Checkout and Orders
+- Negative and Boundary Scenarios
 ---
 
 # Initial Coverage Summary
@@ -412,6 +431,16 @@ Each test case contains:
 | Previous Cases | 15 |
 | **Total Cases** | **27** |
 
+## Execution Notes
+
+These Navigation & Categories cases are currently **Not Run**. Actual results will be recorded during test execution against the Demoblaze application.
+
+Next planned coverage:
+
+- Product Details
+- Shopping Cart
+- Checkout & Orders
+- Negative & Boundary Scenarios
 ---
 
 # 4. Product Details
@@ -572,6 +601,15 @@ Each test case contains:
 | Actual Result | Not Run |
 | Status | Not Run |
 
+## Execution Notes
+
+Product Details cases are currently **Not Run**. Actual results will be recorded during execution against the Demoblaze application.
+
+Next planned coverage:
+
+- Shopping Cart
+- Checkout & Orders
+- Negative & Boundary Scenarios
 ---
 
 # Product Details Coverage Summary
@@ -581,3 +619,225 @@ Each test case contains:
 | Product Details | 12 |
 | Previous Cases | 27 |
 | **Total Cases** | **39** |
+
+
+---
+
+# 5. Shopping Cart
+
+## TC-CART-001 — Open the shopping cart
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | High |
+| Preconditions | Demoblaze home page is accessible |
+| Test Data | None |
+| Steps | 1. Open Demoblaze. 2. Select Cart. |
+| Expected Result | The Shopping Cart page opens successfully. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-002 — Verify empty cart state
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | High |
+| Preconditions | No products have been added to the cart |
+| Test Data | Empty cart |
+| Steps | 1. Open the Shopping Cart. |
+| Expected Result | The cart loads and does not display products that were not added by the user. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-003 — Add one product to the cart
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Critical |
+| Preconditions | Home page is loaded |
+| Test Data | One available product |
+| Steps | 1. Open a product. 2. Select Add to cart. 3. Open Cart. |
+| Expected Result | The selected product appears in the cart. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-004 — Verify product name in cart
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | High |
+| Preconditions | One product has been added to the cart |
+| Test Data | Any available product |
+| Steps | 1. Add a product to the cart. 2. Open Cart. 3. Compare the product name with the product that was selected. |
+| Expected Result | The cart displays the correct product name. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-005 — Verify product price in cart
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Critical |
+| Preconditions | One product has been added |
+| Test Data | Any available product |
+| Steps | 1. Record the product price from the product page. 2. Add the product to the cart. 3. Open Cart. 4. Compare the displayed price. |
+| Expected Result | The cart displays the correct price for the selected product. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-006 — Verify cart total for one product
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Critical |
+| Preconditions | One product is in the cart |
+| Test Data | One available product |
+| Steps | 1. Add one product. 2. Open Cart. 3. Compare the displayed total with the product price. |
+| Expected Result | The cart total correctly reflects the product price. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-007 — Add multiple different products
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Critical |
+| Preconditions | Home page is available |
+| Test Data | Two or more different products |
+| Steps | 1. Add the first product to the cart. 2. Return to the product listing. 3. Add a second product. 4. Open Cart. |
+| Expected Result | All selected products appear in the cart. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-008 — Verify total for multiple products
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Critical |
+| Preconditions | Multiple products are in the cart |
+| Test Data | Two or more products with known prices |
+| Steps | 1. Add multiple products. 2. Open Cart. 3. Calculate the expected total from the displayed product prices. 4. Compare it with the cart total. |
+| Expected Result | The displayed cart total equals the sum of the applicable product prices. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-009 — Remove a product from the cart
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Critical |
+| Preconditions | At least one product is in the cart |
+| Test Data | One or more products |
+| Steps | 1. Open Cart. 2. Select Delete for a product. |
+| Expected Result | The selected product is removed from the cart and the cart information is updated. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-010 — Remove one product while retaining another
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | High |
+| Preconditions | At least two different products are in the cart |
+| Test Data | Product A and Product B |
+| Steps | 1. Add Product A. 2. Add Product B. 3. Open Cart. 4. Remove Product A. |
+| Expected Result | Product A is removed while Product B remains in the cart. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-011 — Verify cart total updates after product removal
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Critical |
+| Preconditions | Multiple products are in the cart |
+| Test Data | Two or more products |
+| Steps | 1. Record the initial cart total. 2. Remove one product. 3. Observe the updated total. |
+| Expected Result | The cart total is recalculated to reflect the remaining products. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-012 — Navigate from cart back to products
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart / Navigation |
+| Priority | Medium |
+| Preconditions | Cart page is open |
+| Test Data | None |
+| Steps | 1. Open Cart. 2. Navigate back to the product listing/home page. |
+| Expected Result | The user can return to the product browsing experience without an application error. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-013 — Add a product after returning from the cart
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | High |
+| Preconditions | Cart can be opened successfully |
+| Test Data | Two different products |
+| Steps | 1. Add Product A. 2. Open Cart. 3. Return to products. 4. Add Product B. 5. Open Cart again. |
+| Expected Result | Both selected products are represented correctly in the cart. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-014 — Refresh the cart page
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart |
+| Priority | Medium |
+| Preconditions | Product(s) are present in the cart |
+| Test Data | One or more products |
+| Steps | 1. Open Cart. 2. Refresh the browser page. |
+| Expected Result | The cart reloads without an application error and the resulting cart state is consistent with the application's implemented behavior. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CART-015 — Proceed from cart to checkout
+
+| Field | Details |
+|---|---|
+| Feature | Shopping Cart / Checkout |
+| Priority | Critical |
+| Preconditions | At least one product is in the cart |
+| Test Data | One available product |
+| Steps | 1. Add a product to the cart. 2. Open Cart. 3. Select the checkout/order control. |
+| Expected Result | The checkout/order interface opens successfully and presents the expected fields or controls required to complete the order. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+---
+
+# Shopping Cart Coverage Summary
+
+| Feature | Test Cases |
+|---|---:|
+| Shopping Cart | 15 |
+| Previous Cases | 39 |
+| **Total Cases** | **54** |
+
+## Execution Notes
+
+Shopping Cart cases are currently **Not Run**. Actual results will be recorded during execution against the Demoblaze application.
+
+Next planned coverage:
+
+- Checkout & Orders
+- Negative & Boundary Scenarios
+- Final regression suite selection
+
+- 
