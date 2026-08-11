@@ -411,3 +411,173 @@ Each test case contains:
 | **New Cases** | **12** |
 | Previous Cases | 15 |
 | **Total Cases** | **27** |
+
+---
+
+# 4. Product Details
+
+## TC-PROD-001 — Open a product detail page
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | Critical |
+| Preconditions | Home page is loaded and products are displayed |
+| Test Data | Any available product |
+| Steps | 1. Select a product from the product listing. |
+| Expected Result | The selected product detail page opens successfully. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-002 — Verify product name is displayed
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | High |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Locate the product name. |
+| Expected Result | The product name is displayed clearly and corresponds to the selected product. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-003 — Verify product price is displayed
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | High |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Locate the displayed price. |
+| Expected Result | A product price is displayed and is associated with the selected product. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-004 — Verify product description is displayed
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | High |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Locate the product description. |
+| Expected Result | The product description is displayed and provides information about the selected product. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-005 — Verify product image is displayed
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | Medium |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Observe the product image area. |
+| Expected Result | The product image loads and is displayed without a broken-image indicator. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-006 — Verify product information matches the selected product
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | High |
+| Preconditions | Product listing is displayed |
+| Test Data | Any available product |
+| Steps | 1. Record the product name from the listing. 2. Select the product. 3. Compare the product name on the detail page. |
+| Expected Result | The product detail page corresponds to the product selected from the listing. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-007 — Verify product price consistency
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | Critical |
+| Preconditions | Product listing is displayed |
+| Test Data | Any available product |
+| Steps | 1. Record the displayed product price from the listing. 2. Open the product detail page. 3. Compare the displayed prices. |
+| Expected Result | The product price is consistent between the product listing and detail page, unless a documented application behavior indicates otherwise. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-008 — Add a product to the cart from its detail page
+
+| Field | Details |
+|---|---|
+| Feature | Product Details / Cart |
+| Priority | Critical |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Select Add to cart. 3. Navigate to the cart. |
+| Expected Result | The selected product is added to the cart with the correct product information and price. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-009 — Verify add-to-cart confirmation behavior
+
+| Field | Details |
+|---|---|
+| Feature | Product Details / Cart |
+| Priority | High |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Select Add to cart. 2. Observe the application's response. |
+| Expected Result | The application provides the expected confirmation or feedback that the product was added to the cart. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-010 — Navigate back from product details
+
+| Field | Details |
+|---|---|
+| Feature | Product Details / Navigation |
+| Priority | Medium |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Use the available navigation or browser Back control. |
+| Expected Result | The user returns to the expected product listing or previous page without an application error. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-011 — Refresh a product detail page
+
+| Field | Details |
+|---|---|
+| Feature | Product Details |
+| Priority | Medium |
+| Preconditions | Product detail page is open |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Refresh the browser. |
+| Expected Result | The product detail page reloads successfully and the expected product information remains available. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-PROD-012 — Verify product details remain usable after category navigation
+
+| Field | Details |
+|---|---|
+| Feature | Product Details / Categories |
+| Priority | Medium |
+| Preconditions | Product categories are available |
+| Test Data | Products from at least two categories |
+| Steps | 1. Select a category. 2. Open a product. 3. Return to the product listing. 4. Select another category. 5. Open a product from the second category. |
+| Expected Result | Product detail pages load correctly for products selected from different categories. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+---
+
+# Product Details Coverage Summary
+
+| Feature | Test Cases |
+|---|---:|
+| Product Details | 12 |
+| Previous Cases | 27 |
+| **Total Cases** | **39** |
