@@ -840,4 +840,204 @@ Next planned coverage:
 - Negative & Boundary Scenarios
 - Final regression suite selection
 
-- 
+- ---
+
+# 6. Checkout & Orders
+
+## TC-CHECKOUT-001 — Open checkout from the shopping cart
+
+| Field | Details |
+|---|---|
+| Feature | Checkout |
+| Priority | Critical |
+| Preconditions | At least one product is in the cart |
+| Test Data | One available product |
+| Steps | 1. Add a product to the cart. 2. Open the Shopping Cart. 3. Select the checkout/order control. |
+| Expected Result | The checkout/order dialog opens successfully. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-002 — Verify checkout form fields are displayed
+
+| Field | Details |
+|---|---|
+| Feature | Checkout |
+| Priority | Critical |
+| Preconditions | Checkout/order dialog is open |
+| Test Data | None |
+| Steps | 1. Open checkout. 2. Review the available form fields. |
+| Expected Result | The expected customer and payment/order fields are displayed and available for input. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-003 — Complete checkout with valid information
+
+| Field | Details |
+|---|---|
+| Feature | Checkout |
+| Priority | Critical |
+| Preconditions | At least one product is in the cart and checkout is available |
+| Test Data | Valid test customer information and valid non-sensitive test payment information appropriate for the demo environment |
+| Steps | 1. Add a product to the cart. 2. Open checkout. 3. Enter valid information into the required fields. 4. Submit/place the order. |
+| Expected Result | The application accepts the valid information and processes the order according to the application's implemented behavior. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-004 — Submit checkout with an empty name field
+
+| Field | Details |
+|---|---|
+| Feature | Checkout Validation |
+| Priority | High |
+| Preconditions | Checkout/order dialog is open |
+| Test Data | Name: blank; remaining fields populated with valid test data |
+| Steps | 1. Leave the name field empty. 2. Complete the remaining fields. 3. Attempt to place the order. |
+| Expected Result | The application handles the missing required name according to its implemented validation behavior and does not incorrectly accept incomplete information. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-005 — Submit checkout with an empty country field
+
+| Field | Details |
+|---|---|
+| Feature | Checkout Validation |
+| Priority | High |
+| Preconditions | Checkout/order dialog is open |
+| Test Data | Country: blank; remaining fields populated with valid test data |
+| Steps | 1. Leave the country field empty. 2. Complete the remaining fields. 3. Attempt to place the order. |
+| Expected Result | The application handles the missing country according to its implemented validation behavior. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-006 — Submit checkout with an empty city field
+
+| Field | Details |
+|---|---|
+| Feature | Checkout Validation |
+| Priority | High |
+| Preconditions | Checkout/order dialog is open |
+| Test Data | City: blank; remaining fields populated with valid test data |
+| Steps | 1. Leave the city field empty. 2. Complete the remaining fields. 3. Attempt to place the order. |
+| Expected Result | The application handles the missing city according to its implemented validation behavior. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-007 — Submit checkout with an empty credit card field
+
+| Field | Details |
+|---|---|
+| Feature | Checkout Validation |
+| Priority | Critical |
+| Preconditions | Checkout/order dialog is open |
+| Test Data | Credit card: blank; remaining fields populated with valid test data |
+| Steps | 1. Leave the credit card field empty. 2. Complete the remaining fields. 3. Attempt to place the order. |
+| Expected Result | The application handles the missing payment information according to its implemented behavior and does not incorrectly accept incomplete payment data. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-008 — Submit checkout with an empty month field
+
+| Field | Details |
+|---|---|
+| Feature | Checkout Validation |
+| Priority | High |
+| Preconditions | Checkout/order dialog is open |
+| Test Data | Month: blank; remaining fields populated with valid test data |
+| Steps | 1. Leave the month field empty. 2. Complete the remaining fields. 3. Attempt to place the order. |
+| Expected Result | The application handles the missing month according to its implemented validation behavior. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-009 — Submit checkout with an empty year field
+
+| Field | Details |
+|---|---|
+| Feature | Checkout Validation |
+| Priority | High |
+| Preconditions | Checkout/order dialog is open |
+| Test Data | Year: blank; remaining fields populated with valid test data |
+| Steps | 1. Leave the year field empty. 2. Complete the remaining fields. 3. Attempt to place the order. |
+| Expected Result | The application handles the missing year according to its implemented validation behavior. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-010 — Verify checkout order total matches cart total
+
+| Field | Details |
+|---|---|
+| Feature | Checkout / Order Total |
+| Priority | Critical |
+| Preconditions | Product(s) are in the cart |
+| Test Data | One or more products |
+| Steps | 1. Record the cart total. 2. Open checkout. 3. Compare the displayed order total with the cart total. |
+| Expected Result | The checkout order total is consistent with the applicable cart total. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-011 — Complete checkout with multiple products
+
+| Field | Details |
+|---|---|
+| Feature | Checkout / Orders |
+| Priority | Critical |
+| Preconditions | Multiple products are in the cart |
+| Test Data | Two or more different products |
+| Steps | 1. Add multiple products to the cart. 2. Open checkout. 3. Enter valid test information. 4. Submit/place the order. |
+| Expected Result | The order is processed according to the application's implemented behavior and reflects the selected products. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-012 — Cancel or close the checkout dialog
+
+| Field | Details |
+|---|---|
+| Feature | Checkout |
+| Priority | Medium |
+| Preconditions | Checkout/order dialog is open |
+| Test Data | None |
+| Steps | 1. Open checkout. 2. Select the available Cancel or Close control. |
+| Expected Result | The checkout dialog closes without incorrectly submitting an order. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-013 — Verify successful order confirmation
+
+| Field | Details |
+|---|---|
+| Feature | Orders |
+| Priority | Critical |
+| Preconditions | Valid order information has been submitted |
+| Test Data | Valid test checkout information |
+| Steps | 1. Complete checkout using valid test information. 2. Submit the order. |
+| Expected Result | The application displays an order-success confirmation containing the expected order information. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-CHECKOUT-014 — Verify order completion does not display an application error
+
+| Field | Details |
+|---|---|
+| Feature | Orders |
+| Priority | Critical |
+| Preconditions | A valid order is submitted |
+| Test Data | Valid test checkout information |
+| Steps | 1. Complete a valid checkout. 2. Observe the confirmation/result screen. |
+| Expected Result | The order completes without an unexpected application error, broken page, or unhandled exception visible to the user. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+---
+
+# Checkout & Orders Coverage Summary
+
+| Feature | Test Cases |
+|---|---:|
+| Checkout & Orders | 14 |
+| Previous Cases | 54 |
+| **Total Cases** | **68** |
+
+## Execution Notes
+
+Checkout & Orders cases are currently **Not Run**. Actual results will be recorded during execution against the Demoblaze application.
+
+The next planned section will focus on **Negative & Boundary Scenarios** and will provide additional risk-based coverage beyond the primary customer workflows.
