@@ -242,3 +242,172 @@ Each test case contains:
 | Login / Logout | 7 |
 | **Total** | **15** |
 
+# 3. Navigation & Categories
+
+## TC-NAV-001 — Verify the home page loads successfully
+
+| Field | Details |
+|---|---|
+| Feature | Navigation |
+| Priority | Critical |
+| Preconditions | Demoblaze is accessible |
+| Test Data | None |
+| Steps | 1. Navigate to the Demoblaze home page. 2. Wait for the page to load. |
+| Expected Result | The home page loads successfully and the primary navigation and product content are displayed. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-002 — Verify the site logo returns the user to the home page
+
+| Field | Details |
+|---|---|
+| Feature | Navigation |
+| Priority | High |
+| Preconditions | User is on a page other than the home page |
+| Test Data | None |
+| Steps | 1. Navigate to a product or category page. 2. Select the Demoblaze logo/home control. |
+| Expected Result | The user is returned to the home page. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-003 — Navigate from home page to a product detail page
+
+| Field | Details |
+|---|---|
+| Feature | Navigation |
+| Priority | High |
+| Preconditions | Home page is loaded and products are displayed |
+| Test Data | Any available product |
+| Steps | 1. Select a product from the product listing. |
+| Expected Result | The selected product detail page opens and displays information for the selected product. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-004 — Navigate between product pages using browser navigation
+
+| Field | Details |
+|---|---|
+| Feature | Navigation |
+| Priority | Medium |
+| Preconditions | User has navigated from the home page to a product detail page |
+| Test Data | Any available product |
+| Steps | 1. Open a product detail page. 2. Use the browser Back control. 3. Use the browser Forward control. |
+| Expected Result | Browser navigation returns the user to the previously visited pages without unexpected errors. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-005 — Refresh the home page
+
+| Field | Details |
+|---|---|
+| Feature | Navigation |
+| Priority | Medium |
+| Preconditions | Home page is loaded |
+| Test Data | None |
+| Steps | 1. Load the home page. 2. Refresh the browser page. |
+| Expected Result | The page reloads successfully and the expected navigation and product content remain available. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-006 — Verify primary navigation links are accessible
+
+| Field | Details |
+|---|---|
+| Feature | Navigation |
+| Priority | High |
+| Preconditions | Home page is loaded |
+| Test Data | None |
+| Steps | 1. Review the primary navigation controls. 2. Select each available navigation option. |
+| Expected Result | Each available navigation control responds and opens the expected destination or interface. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-007 — Select Phones category
+
+| Field | Details |
+|---|---|
+| Feature | Categories |
+| Priority | High |
+| Preconditions | Home page is loaded |
+| Test Data | Phones category |
+| Steps | 1. Select the Phones category. |
+| Expected Result | The product listing updates to display products belonging to the Phones category. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-008 — Select Laptops category
+
+| Field | Details |
+|---|---|
+| Feature | Categories |
+| Priority | High |
+| Preconditions | Home page is loaded |
+| Test Data | Laptops category |
+| Steps | 1. Select the Laptops category. |
+| Expected Result | The product listing updates to display products belonging to the Laptops category. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-009 — Select Monitors category
+
+| Field | Details |
+|---|---|
+| Feature | Categories |
+| Priority | High |
+| Preconditions | Home page is loaded |
+| Test Data | Monitors category |
+| Steps | 1. Select the Monitors category. |
+| Expected Result | The product listing updates to display products belonging to the Monitors category. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-010 — Switch between product categories
+
+| Field | Details |
+|---|---|
+| Feature | Categories |
+| Priority | High |
+| Preconditions | Home page is loaded |
+| Test Data | Phones, Laptops, and Monitors |
+| Steps | 1. Select Phones. 2. Verify the displayed products. 3. Select Laptops. 4. Verify the displayed products. 5. Select Monitors. 6. Verify the displayed products. |
+| Expected Result | Each category selection updates the displayed products appropriately without displaying products from an unrelated category. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-011 — Return from a category to the home/product listing
+
+| Field | Details |
+|---|---|
+| Feature | Categories / Navigation |
+| Priority | Medium |
+| Preconditions | A product category is selected |
+| Test Data | Any category |
+| Steps | 1. Select a category. 2. Use the available home/navigation control. |
+| Expected Result | The user returns to the expected product listing/home view. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+## TC-NAV-012 — Verify category selection does not create an application error
+
+| Field | Details |
+|---|---|
+| Feature | Categories |
+| Priority | Medium |
+| Preconditions | Home page is available |
+| Test Data | Each available product category |
+| Steps | 1. Select each available category. 2. Observe the page after each selection. |
+| Expected Result | The category loads without an application crash, broken page, or unexpected error message. |
+| Actual Result | Not Run |
+| Status | Not Run |
+
+---
+
+# Navigation & Categories Coverage Summary
+
+| Feature | Test Cases |
+|---|---:|
+| Navigation | 6 |
+| Categories | 6 |
+| **New Cases** | **12** |
+| Previous Cases | 15 |
+| **Total Cases** | **27** |
