@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "Demoblaze API Tests",
+    "_postman_id": "ecommerce-qa-demoblaze-api",
+    "description": "API test collection for the E-Commerce QA Portfolio. Planned requests are separated by product, authentication, cart, orders, and negative scenarios.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.demoblaze.com"
+    },
+    {
+      "key": "username",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": "1"
+    },
+    {
+      "key": "cartId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Products",
+      "item": [
+        {
+          "name": "API-001 - Get Product Catalog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/entries",
+              "host": ["{{baseUrl}}"],
+              "path": ["entries"]
+            }
+          }
+        },
+        {
+          "name": "API-002 - Get Product By ID",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{productId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/view",
+              "host": ["{{baseUrl}}"],
+              "path": ["view"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Authentication",
+      "item": [
+        {
+          "name": "API-003 - Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["login"]
+            }
+          }
+        },
+        {
+          "name": "API-004 - Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["signup"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Cart",
+      "item": [
+        {
+          "name": "API-005 - Add Product To Cart",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": ["{{baseUrl}}"],
+              "path": ["addtocart"]
+            }
+          }
+        },
+        {
+          "name": "API-006 - View Cart",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": {}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/viewcart",
+              "host": ["{{baseUrl}}"],
+              "path": ["viewcart"]
+            }
+          }
+        },
+        {
+          "name": "API-007 - Delete Cart Item",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/deleteitem",
+              "host": ["{{baseUrl}}"],
+              "path": ["deleteitem"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Orders",
+      "item": [
+        {
+          "name": "API-008 - Place Order",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"DeMarko QA\",\n  \"country\": \"United States\",\n  \"city\": \"Des Moines\",\n  \"card\": \"1111\",\n  \"month\": \"12\",\n  \"year\": \"2026\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Negative Tests",
+      "item": [
+        {
+          "name": "API-NEG-001 - Login With Invalid Credentials",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"invalid-user\",\n  \"password\": \"invalid-password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["login"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
