@@ -1,11 +1,12 @@
 # E-Commerce QA Portfolio
 
-End-to-end QA portfolio project for the public Demoblaze e-commerce application. The project demonstrates a practical QA workflow from test planning and manual execution through Jira defect reporting, regression selection, API validation, SQL/backend validation planning, and UI automation planning.
+End-to-end QA portfolio project for the public Demoblaze e-commerce application. The project demonstrates a practical QA workflow from test planning and manual execution through Jira defect reporting, regression testing, API validation, SQL/backend validation planning, and UI automation planning.
 
 ## Project Overview
 
 **Application:** Demoblaze Product Store  
-**Test environment:** Desktop Chrome  
+**API:** `https://api.demoblaze.com`  
+**Test environment:** Desktop Chrome / Postman  
 **Jira project:** EQAP  
 **Repository:** `demrkmoore-cell/E-Commerce-QA`
 
@@ -18,9 +19,10 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 - Shopping cart validation
 - Checkout validation
 - Browser refresh and navigation testing
-- Defect reporting and retesting in Jira
-- API testing plan
-- SQL/backend validation plan
+- REST API testing with Postman
+- Response/status-code validation
+- Defect reporting and evidence management in Jira
+- SQL/backend validation planning
 - UI automation roadmap
 
 ## Execution Results
@@ -32,9 +34,36 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | ⚠️ Blocked | **1** |
 | **Total Executions** | **106** |
 
-The detailed execution record is maintained separately in [`test-summary/execution-results.md`](test-summary/execution-results.md).
+The detailed manual execution record is maintained in [`test-summary/execution-results.md`](test-summary/execution-results.md).
 
-## Key Findings
+## API Testing
+
+API testing was executed against the public Demoblaze API using Postman. The collection covers authentication, product/catalog operations, shopping-cart operations, and negative scenarios.
+
+### API techniques demonstrated
+
+- Positive and negative testing
+- Boundary and invalid-input testing
+- Request-body manipulation
+- Authentication/token validation
+- HTTP status-code validation
+- Response-body and error-message assertions
+- Postman test scripting
+- Reproducible defect evidence
+
+The working Postman collection is stored at [`api-tests/Demoblaze-API-Tests.postman_collection.json`](api-tests/Demoblaze-API-Tests.postman_collection.json).
+
+### Confirmed API defect
+
+**EQAP-10 — `/addtocart` returns HTTP 500 when request ID is null**
+
+The test reproduced a server-side HTTP 500 response for invalid client input. Postman assertions passed for the observed behavior, and the Jira defect includes request/response screenshots and reproduction details.
+
+See [`bug-reports/EQAP-10.md`](bug-reports/EQAP-10.md) and [Jira EQAP-10](https://demrkmoore.atlassian.net/browse/EQAP-10).
+
+> The repository does not publish authentication tokens, passwords, or other secrets. Screenshots containing sensitive values should remain attached to Jira or be redacted before public publication.
+
+## Key Manual Testing Findings
 
 The manual execution identified defects involving:
 
@@ -83,7 +112,7 @@ Priority is given to high-risk flows such as:
 
 ## Jira Defects
 
-| Jira | Summary | Current classification |
+| Jira | Summary | Classification |
 |---|---|---|
 | EQAP-3 | Registered user cannot log in after successful registration | Confirmed defect |
 | EQAP-4 | Empty cart displays a blank total | Confirmed defect |
@@ -92,22 +121,47 @@ Priority is given to high-risk flows such as:
 | EQAP-7 | Checkout accepts invalid/expired expiration year | Confirmed defect |
 | EQAP-8 | Checkout can be initiated with an empty cart | Confirmed defect |
 | EQAP-9 | Original multi-category cart-loss observation | Non-reproducible / investigation |
+| EQAP-10 | `/addtocart` returns HTTP 500 when request ID is null | Confirmed API defect |
 
 ## Evidence
 
-Screenshots and other test evidence should be stored in the `evidence/` area using a consistent naming convention such as:
+Jira is used as the primary evidence location for defects and their request/response screenshots. Public repository documentation references the evidence without exposing credentials or sensitive payment data.
 
-`TC-CHECKOUT-013-invalid-year-0000-accepted.png`
+Recommended naming convention for future redacted evidence:
 
-Payment-related screenshots must be redacted before being uploaded to Jira or committed to a public GitHub repository. Full card numbers should never be published.
+`TC-<AREA>-<ID>-<condition>-<result>.png`
+
+Payment-related screenshots must be redacted before being uploaded to Jira or committed to a public GitHub repository. Full card numbers and authentication tokens should never be published.
+
+## Repository Structure
+
+```text
+E-Commerce-QA/
+├── README.md
+├── api-tests/
+│   ├── Demoblaze-API-Tests.postman_collection.json
+│   └── README.md
+├── bug-reports/
+│   ├── README.md
+│   ├── EQAP-3.md ... EQAP-9.md
+│   └── EQAP-10.md
+├── regression/
+│   └── README.md
+├── test-cases/
+│   └── functional-test-cases.md
+├── test-plan/
+│   └── QA-Test-Plan.md
+└── test-summary/
+    └── execution-results.md
+```
 
 ## Tools & Technologies
 
 - **Jira** — defect tracking and test execution evidence
 - **Git / GitHub** — source control and portfolio presentation
+- **Postman** — API testing and automated response assertions
 - **Chrome DevTools** — browser-level investigation
-- **Postman** — API testing
-- **SQL / PostgreSQL** — backend validation
+- **SQL / PostgreSQL** — backend validation planning
 - **Python / Pytest** — automation
 - **Playwright / Selenium** — UI automation roadmap
 - **Markdown** — test documentation
@@ -123,19 +177,9 @@ The project does not attempt to automate every manual test. The automation roadm
 - Cart total calculations
 - Core checkout validation
 
-See the [`automation/`](automation/) directory for the planned automation structure.
-
-## API Testing
-
-API testing is planned around the application's available service endpoints, including positive and negative validation of create/delete operations where applicable.
-
-See [`api-tests/`](api-tests/) for the API test documentation.
-
 ## SQL / Backend Validation
 
 Backend validation plans focus on verifying stored values and calculated totals without modifying or truncating application data.
-
-See [`sql-validation/`](sql-validation/) for the validation approach.
 
 ## Project Outcome
 
@@ -144,10 +188,13 @@ This project demonstrates the ability to:
 - design a structured functional test suite
 - execute risk-based manual tests
 - perform boundary and negative testing
+- validate REST APIs with Postman
+- write automated response assertions
 - identify and document defects in Jira
+- preserve reproducible request/response evidence
 - retest defects and distinguish reproducible issues from non-reproducible behavior
 - build a focused regression strategy
-- plan API, SQL, and UI automation coverage
+- plan SQL and UI automation coverage
 - organize QA evidence for a professional portfolio
 
 ## Author
