@@ -2,75 +2,107 @@
 
 ## Scope
 
-This section documents API-level validation for the Demoblaze e-commerce application.
+This section documents API-level validation for the public Demoblaze e-commerce application using Postman.
 
-The live application exposes a public catalog API at `https://api.demoblaze.com/`. A current request to `GET /entries` returned product records including product ID, category, title, price, description, and image path. citeturn180989view0
+**Base URL:** `https://api.demoblaze.com`
 
 ## API Test Objectives
 
 - Validate successful product retrieval.
-- Validate response structure and required fields.
-- Validate product values against the UI/catalog expectations.
-- Validate negative input handling for authentication, cart, and order operations where those endpoints are exercised.
-- Validate HTTP status codes, response body structure, and error messages.
-- Keep authentication/payment data out of the repository.
+- Validate authentication and token handling.
+- Validate shopping-cart requests with valid and invalid input.
+- Validate HTTP status codes and response bodies.
+- Validate error messages and server-side input handling.
+- Use Postman assertions to make observed behavior reproducible.
+- Link confirmed defects to Jira.
+- Keep authentication credentials and tokens out of the repository.
 
-## Planned Endpoint Coverage
-
-> Endpoint names for write operations should be confirmed against the browser's current Network traffic before execution. This repository intentionally avoids claiming execution for endpoints that have not yet been run and verified.
+## Executed Coverage
 
 | Area | Endpoint / Operation | Status |
 |---|---|---|
-| Catalog | `GET /entries` | Verified live |
-| Product | `POST /view` | Planned |
-| Authentication | `POST /login` | Planned |
-| Registration | `POST /signup` | Planned |
-| Cart | `POST /addtocart` | Planned |
-| Cart | `POST /viewcart` | Planned |
-| Cart | `POST /deletecart` | Planned |
-| Orders | `POST /placeorder` | Planned |
+| Catalog | `GET /entries` | Verified |
+| Authentication | `POST /login` | Verified |
+| Cart | `POST /addtocart` | Verified — positive and negative coverage |
+| Cart | `POST /viewcart` | Covered in collection |
+| Cart | `POST /deleteitem` | Covered in collection |
 
-## Current Live Catalog Observation
+## Negative Testing
 
-`GET https://api.demoblaze.com/entries` currently returns product records with fields such as `id`, `cat`, `title`, `price`, `desc`, and `img`. The observed response includes examples such as Samsung Galaxy S6 at 360, Nokia Lumia 1520 at 820, Nexus 6 at 650, and Samsung Galaxy S7 at 800. citeturn180989view0
+The `/addtocart` negative suite was used to evaluate invalid and malformed request conditions, including:
 
-## Test Design
+- Invalid product IDs
+- Null product IDs
+- Zero product IDs
+- Decimal product IDs
+- Boolean product IDs
+- Extremely large product IDs
+- Missing product ID
+- Missing cookie/token field
+- Invalid authentication token
+- Null request ID
+- Empty request ID
+- Unexpected request fields
+- Malformed JSON
 
-### Positive
+Each case was evaluated from the API's actual response rather than assuming that a negative request must return a specific status code.
 
-- Successful catalog retrieval.
-- Product retrieval by valid ID.
-- Successful authentication with valid credentials.
-- Successful registration with a unique username.
-- Add a valid product to a cart.
-- Retrieve an existing cart.
-- Delete an existing cart item.
-- Place an order with valid required data and a non-empty cart.
+## Confirmed API Defect
 
-### Negative
+### EQAP-10 — Null request ID returns HTTP 500
 
-- Invalid login credentials.
-- Missing required authentication fields.
-- Duplicate registration.
-- Invalid product ID.
-- Add-to-cart with a missing product identifier.
-- Delete-cart for a missing item.
-- Place order with empty cart.
-- Place order with missing required order data.
+`POST /addtocart` returns HTTP 500 Internal Server Error when the request `id` field is explicitly set to `null` while the authentication token and product ID are valid.
 
-### Validation Points
+The Postman validation for this defect includes assertions confirming:
+
+- HTTP 500 response
+- `500 Internal Server Error` response content
+
+The Jira issue contains the reproduction steps, expected/actual behavior, environment information, and two screenshots showing the request and response.
+
+See [`../bug-reports/EQAP-10.md`](../bug-reports/EQAP-10.md) and [Jira EQAP-10](https://demrkmoore.atlassian.net/browse/EQAP-10).
+
+## Observed Validation Behavior
+
+Some invalid requests returned HTTP 200 with an error payload such as:
+
+`{"errorMessage":"Bad parameter, token malformed."}`
+
+These responses are documented as observed API behavior. They are not automatically classified as separate defects when they duplicate an already documented authentication/token-handling behavior.
+
+## Postman Collection
+
+The working collection is stored at:
+
+[`Demoblaze-API-Tests.postman_collection.json`](Demoblaze-API-Tests.postman_collection.json)
+
+The collection contains reusable environment variables such as `baseUrl`, `productId`, `cartId`, and authentication values. Secrets should be supplied through the local Postman environment rather than committed to GitHub.
+
+## Validation Points
 
 For each executed request, record:
 
 1. HTTP method and endpoint.
 2. Request headers and JSON body, excluding secrets.
 3. HTTP status code.
-4. Response body schema.
+4. Response body structure.
 5. Required fields and data types.
 6. Business-rule validation.
 7. Response time where useful.
-8. Defect reference when behavior violates the expected result.
+8. Postman assertion results.
+9. Jira defect reference when behavior violates the expected result.
 
-## Execution Status
+## Portfolio Value
 
-**Current API execution:** 1 live catalog endpoint verified. Remaining cases are planned and should be executed in Postman before being marked PASS/FAIL.
+This API work demonstrates practical QA skills in:
+
+- REST API testing
+- Positive and negative testing
+- Boundary/value-type testing
+- Authentication validation
+- JSON request manipulation
+- Postman scripting
+- Response assertions
+- Defect isolation
+- Jira defect reporting
+- Evidence-driven QA documentation
