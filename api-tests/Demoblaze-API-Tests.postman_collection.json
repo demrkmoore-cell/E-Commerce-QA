@@ -2,30 +2,17 @@
   "info": {
     "name": "Demoblaze API Tests",
     "_postman_id": "ecommerce-qa-demoblaze-api",
-    "description": "API test collection for the E-Commerce QA Portfolio. Planned requests are separated by product, authentication, cart, orders, and negative scenarios.",
+    "description": "API test collection for the E-Commerce QA Portfolio. Includes product, authentication, cart, order, and negative API validation coverage.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    {
-      "key": "baseUrl",
-      "value": "https://api.demoblaze.com"
-    },
-    {
-      "key": "username",
-      "value": ""
-    },
-    {
-      "key": "password",
-      "value": ""
-    },
-    {
-      "key": "productId",
-      "value": "1"
-    },
-    {
-      "key": "cartId",
-      "value": ""
-    }
+    { "key": "baseUrl", "value": "https://api.demoblaze.com" },
+    { "key": "username", "value": "" },
+    { "key": "password", "value": "" },
+    { "key": "productId", "value": "1" },
+    { "key": "cartId", "value": "" },
+    { "key": "authToken", "value": "" },
+    { "key": "timestamp", "value": "" }
   ],
   "item": [
     {
@@ -33,30 +20,15 @@
       "item": [
         {
           "name": "API-001 - Get Product Catalog",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/entries",
-              "host": ["{{baseUrl}}"],
-              "path": ["entries"]
-            }
-          }
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/entries", "host": ["{{baseUrl}}"], "path": ["entries"] } }
         },
         {
           "name": "API-002 - Get Product By ID",
           "request": {
             "method": "POST",
-            "header": [{"key":"Content-Type","value":"application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id\": \"{{productId}}\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/view",
-              "host": ["{{baseUrl}}"],
-              "path": ["view"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{productId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/view", "host": ["{{baseUrl}}"], "path": ["view"] }
           }
         }
       ]
@@ -68,32 +40,32 @@
           "name": "API-003 - Login",
           "request": {
             "method": "POST",
-            "header": [{"key":"Content-Type","value":"application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["login"]
-            }
-          }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/login", "host": ["{{baseUrl}}"], "path": ["login"] }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": [
+              "pm.test(\"Login request returns HTTP 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const token = pm.response.text().replace(\"Auth_token:\", \"\").trim();",
+              "if (token) {",
+              "    pm.environment.set(\"authToken\", token);",
+              "}",
+              "console.log(\"Authentication token extracted and stored in authToken when present.\");"
+            ], "type": "text/javascript" }
+          }]
         },
         {
           "name": "API-004 - Sign Up",
           "request": {
             "method": "POST",
-            "header": [{"key":"Content-Type","value":"application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/signup",
-              "host": ["{{baseUrl}}"],
-              "path": ["signup"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/signup", "host": ["{{baseUrl}}"], "path": ["signup"] }
           }
         }
       ]
@@ -105,48 +77,32 @@
           "name": "API-005 - Add Product To Cart",
           "request": {
             "method": "POST",
-            "header": [{"key":"Content-Type","value":"application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": false\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/addtocart",
-              "host": ["{{baseUrl}}"],
-              "path": ["addtocart"]
-            }
-          }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Add to cart request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});"
+          ], "type": "text/javascript" } }]
         },
         {
           "name": "API-006 - View Cart",
           "request": {
             "method": "POST",
-            "header": [{"key":"Content-Type","value":"application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": {}\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/viewcart",
-              "host": ["{{baseUrl}}"],
-              "path": ["viewcart"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/viewcart", "host": ["{{baseUrl}}"], "path": ["viewcart"] }
           }
         },
         {
           "name": "API-007 - Delete Cart Item",
           "request": {
             "method": "POST",
-            "header": [{"key":"Content-Type","value":"application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}}\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/deleteitem",
-              "host": ["{{baseUrl}}"],
-              "path": ["deleteitem"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}}\n}" },
+            "url": { "raw": "{{baseUrl}}/deleteitem", "host": ["{{baseUrl}}], "path": ["deleteitem"] }
           }
         }
       ]
@@ -158,16 +114,9 @@
           "name": "API-008 - Place Order",
           "request": {
             "method": "POST",
-            "header": [{"key":"Content-Type","value":"application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"DeMarko QA\",\n  \"country\": \"United States\",\n  \"city\": \"Des Moines\",\n  \"card\": \"1111\",\n  \"month\": \"12\",\n  \"year\": \"2026\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/orders",
-              "host": ["{{baseUrl}}"],
-              "path": ["orders"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"DeMarko QA\",\n  \"country\": \"United States\",\n  \"city\": \"Des Moines\",\n  \"card\": \"1111\",\n  \"month\": \"12\",\n  \"year\": \"2026\"\n}" },
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}], "path": ["orders"] }
           }
         }
       ]
@@ -176,20 +125,219 @@
       "name": "05 - Negative Tests",
       "item": [
         {
-          "name": "API-NEG-001 - Login With Invalid Credentials",
+          "name": "NEG - Add to Cart - Null ID",
           "request": {
             "method": "POST",
-            "header": [{"key":"Content-Type","value":"application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"invalid-user\",\n  \"password\": \"invalid-password\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["login"]
-            }
-          }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": null,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Null ID request returns HTTP 500\", function () {",
+            "    pm.response.to.have.status(500);",
+            "});",
+            "pm.test(\"API returns Internal Server Error\", function () {",
+            "    pm.expect(pm.response.text()).to.include(\"500 Internal Server Error\");",
+            "});",
+            "console.log(\"Potential defect: API returned HTTP 500 when the request ID was null.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Empty ID",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Empty ID request returns HTTP 500\", function () {",
+            "    pm.response.to.have.status(500);",
+            "});",
+            "pm.test(\"API returns Internal Server Error\", function () {",
+            "    pm.expect(pm.response.text()).to.include(\"500 Internal Server Error\");",
+            "});",
+            "console.log(\"Potential defect: API returned HTTP 500 when the request ID was empty.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Invalid ID Type",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": 12345,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Invalid ID type request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "console.log(\"Observed behavior: API accepted a numeric request ID and returned HTTP 200.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Invalid Auth Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"INVALID_TOKEN\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Invalid auth token request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "pm.test(\"API returns token validation error\", function () {",
+            "    const response = pm.response.json();",
+            "    pm.expect(response.errorMessage).to.equal(\"Bad parameter, token malformed.\");",
+            "});"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Missing Cookie",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Missing cookie request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "pm.test(\"API returns token validation error\", function () {",
+            "    const response = pm.response.json();",
+            "    pm.expect(response.errorMessage).to.equal(\"Bad parameter, token malformed.\");",
+            "});"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Malformed JSON",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"id\": \"{{cartId}}\", \"cookie\": \"{{authToken}}\", \"prod_id\": {{productId}}, " },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Malformed JSON request returns HTTP 400\", function () {",
+            "    pm.response.to.have.status(400);",
+            "});",
+            "pm.test(\"API rejects malformed JSON\", function () {",
+            "    pm.expect(pm.response.text()).to.include(\"400 Bad Request\");",
+            "});",
+            "console.log(\"Expected result: API rejected malformed JSON with HTTP 400.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Null Product ID",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Null product ID request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "pm.test(\"API returns an empty response for null product ID\", function () {",
+            "    pm.expect(pm.response.text()).to.be.empty;",
+            "});",
+            "console.log(\"Potential defect: API returned HTTP 200 with an empty response for null product ID.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Zero Product ID",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Zero product ID request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "pm.test(\"API returns an empty response for zero product ID\", function () {",
+            "    pm.expect(pm.response.text()).to.be.empty;",
+            "});"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Unexpected Field",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true,\n  \"unexpected_field\": \"INVALID\"\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Unexpected field request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "console.log(\"Potential defect: API accepted unexpected request field 'unexpected_field' and processed the request successfully.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Extremely Large Product ID",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999999999999999,\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Extremely large product ID request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "console.log(\"Potential defect: API accepted extremely large product ID and processed the request successfully.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Decimal Product ID",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 1.5,\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Decimal product ID request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "console.log(\"Potential defect: API accepted decimal product ID 1.5 and processed the request successfully.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Boolean Product ID",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "console.log(\"Potential defect: API accepted Boolean product ID true and processed the request successfully.\");"
+          ], "type": "text/javascript" } }]
+        },
+        {
+          "name": "NEG - Add to Cart - Invalid Product ID",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Invalid product ID request returns HTTP 200\", function () {",
+            "    pm.response.to.have.status(200);",
+            "});",
+            "console.log(\"Potential defect: API accepted invalid product ID 999999.\");"
+          ], "type": "text/javascript" } }]
         }
       ]
     }
