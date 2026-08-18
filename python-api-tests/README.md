@@ -27,10 +27,11 @@ This suite demonstrates maintainable API automation using **Python, Pytest, Requ
 | Authentication negative | `POST /login` | Validates invalid-password error handling |
 | Products | `GET /entries` | Validates product collection and required fields |
 | Add to Cart | `POST /addtocart` | Authenticates and adds a test product |
+| Add to Cart negative | `POST /addtocart` | Monitors the documented null-request-ID server error |
 | View Cart | `POST /viewcart` | Verifies the added product appears in the cart |
 | Delete Item | `POST /deleteitem` | Deletes the test item and verifies removal |
 
-**Current suite: 6 automated tests.**
+**Current suite: 7 automated tests.**
 
 ## Framework Design
 
@@ -90,9 +91,9 @@ CI performs the following steps:
 1. Checks out the repository.
 2. Installs Python 3.11 and pinned dependencies.
 3. Loads credentials from GitHub Actions Secrets.
-4. Runs all API tests.
+4. Runs all 7 API tests.
 5. Generates a self-contained HTML test report.
-6. Uploads the report as a workflow artifact even when tests fail.
+6. Uploads the report as a GitHub Actions artifact even when tests fail.
 
 ## Portfolio Value
 
