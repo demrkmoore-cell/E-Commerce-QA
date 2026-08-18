@@ -1,12 +1,12 @@
 # E-Commerce QA Portfolio
 
-End-to-end QA portfolio project for the public Demoblaze e-commerce application. The project demonstrates a practical QA workflow from test planning and manual execution through Jira defect reporting, regression testing, API validation, SQL/backend validation planning, and UI automation planning.
+End-to-end QA portfolio project for the public Demoblaze e-commerce application. The project demonstrates a practical QA workflow from test planning and manual execution through Jira defect reporting, regression testing, API validation, Python API automation, GitHub Actions CI, SQL/backend validation planning, and UI automation planning.
 
 ## Project Overview
 
 **Application:** Demoblaze Product Store  
 **API:** `https://api.demoblaze.com`  
-**Test environment:** Desktop Chrome / Postman  
+**Test environment:** Desktop Chrome / Postman / Python API automation  
 **Jira project:** EQAP  
 **Repository:** `demrkmoore-cell/E-Commerce-QA`
 
@@ -20,6 +20,8 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 - Checkout validation
 - Browser refresh and navigation testing
 - REST API testing with Postman
+- Python API automation with Pytest and Requests
+- GitHub Actions continuous integration
 - Response/status-code validation
 - Defect reporting and evidence management in Jira
 - SQL/backend validation planning
@@ -38,9 +40,11 @@ The detailed manual execution record is maintained in [`test-summary/execution-r
 
 ## API Testing
 
-API testing was executed against the public Demoblaze API using Postman. The collection covers authentication, product/catalog operations, shopping-cart operations, and negative scenarios.
+API testing was executed against the public Demoblaze API using Postman and Python automation. The collection and automated suite cover authentication, product/catalog operations, shopping-cart operations, and negative scenarios.
 
-### API techniques demonstrated
+### Postman API testing
+
+API techniques demonstrated:
 
 - Positive and negative testing
 - Boundary and invalid-input testing
@@ -53,7 +57,60 @@ API testing was executed against the public Demoblaze API using Postman. The col
 
 The working Postman collection is stored at [`api-tests/Demoblaze-API-Tests.postman_collection.json`](api-tests/Demoblaze-API-Tests.postman_collection.json).
 
-### Confirmed API defect
+### Python API automation
+
+The repository also contains a Python/Pytest API automation suite in [`python-api-tests/`](python-api-tests/).
+
+The current automated regression suite contains **6 passing tests** covering:
+
+| Automated Test | Endpoint | Coverage |
+|---|---|---|
+| Login success | `POST /login` | Validates successful authentication and token response |
+| Login negative | `POST /login` | Validates invalid-password error handling |
+| Product retrieval | `GET /entries` | Validates product collection and required fields |
+| Add to cart | `POST /addtocart` | Authenticates and adds a test product |
+| View cart | `POST /viewcart` | Verifies the added product appears in the cart |
+| Delete cart item | `POST /deleteitem` | Removes the test item and verifies removal |
+
+Technology used:
+
+- Python 3.11
+- Pytest
+- Requests
+- Environment-based credentials
+- JSON response validation
+- HTTP status-code assertions
+
+Run the suite locally from the repository root with:
+
+```bash
+cd python-api-tests
+source .venv/bin/activate
+pytest -v
+```
+
+Expected result for the current suite: **6 passed**.
+
+### GitHub Actions CI
+
+The Python API suite runs automatically through GitHub Actions on pushes and pull requests to `main`, and can also be triggered manually.
+
+Workflow: [`.github/workflows/python-api-tests.yml`](.github/workflows/python-api-tests.yml)
+
+The CI workflow:
+
+1. Checks out the repository
+2. Sets up Python 3.11
+3. Installs the pinned dependencies from `python-api-tests/requirements.txt`
+4. Loads Demoblaze credentials from GitHub Actions Secrets
+5. Executes the Pytest API suite
+6. Reports the pass/fail result in GitHub Actions
+
+The current CI validation completed successfully with **6/6 API tests passing**.
+
+> Authentication credentials are stored as GitHub Actions Secrets and are not committed to the repository. The repository does not publish passwords, authentication tokens, or other secrets.
+
+## Confirmed API Defect
 
 **EQAP-10 — `/addtocart` returns HTTP 500 when request ID is null**
 
@@ -141,6 +198,19 @@ E-Commerce-QA/
 ├── api-tests/
 │   ├── Demoblaze-API-Tests.postman_collection.json
 │   └── README.md
+├── python-api-tests/
+│   ├── README.md
+│   ├── requirements.txt
+│   └── tests/
+│       ├── test_authentication.py
+│       ├── test_authentication_negative.py
+│       ├── test_cart.py
+│       ├── test_delete_item.py
+│       ├── test_products.py
+│       └── test_view_cart.py
+├── .github/
+│   └── workflows/
+│       └── python-api-tests.yml
 ├── bug-reports/
 │   ├── README.md
 │   ├── EQAP-3.md ... EQAP-9.md
@@ -158,24 +228,39 @@ E-Commerce-QA/
 ## Tools & Technologies
 
 - **Jira** — defect tracking and test execution evidence
-- **Git / GitHub** — source control and portfolio presentation
+- **Git / GitHub** — source control, CI, and portfolio presentation
+- **GitHub Actions** — continuous integration for automated API tests
 - **Postman** — API testing and automated response assertions
+- **Python / Pytest** — API test automation
+- **Requests** — HTTP/API automation
 - **Chrome DevTools** — browser-level investigation
 - **SQL / PostgreSQL** — backend validation planning
-- **Python / Pytest** — automation
 - **Playwright / Selenium** — UI automation roadmap
 - **Markdown** — test documentation
 
 ## Automation Strategy
 
-The project does not attempt to automate every manual test. The automation roadmap prioritizes high-frequency, high-risk regression flows such as:
+The project does not attempt to automate every manual test. The automation strategy prioritizes high-frequency, high-risk regression flows and demonstrates both API-level automation and CI execution.
+
+### Current automation coverage
 
 - Login smoke coverage
+- Invalid-password authentication coverage
+- Product/catalog response validation
+- Add-to-cart flow
+- View-cart verification
+- Delete-item flow
+- Automated regression execution through GitHub Actions
+
+### Future automation roadmap
+
+The broader automation roadmap prioritizes:
+
 - Category navigation
 - Product detail validation
-- Add/remove cart flows
 - Cart total calculations
 - Core checkout validation
+- Additional negative and boundary API scenarios
 
 ## SQL / Backend Validation
 
@@ -189,6 +274,9 @@ This project demonstrates the ability to:
 - execute risk-based manual tests
 - perform boundary and negative testing
 - validate REST APIs with Postman
+- build Python API automation with Pytest and Requests
+- integrate automated tests into GitHub Actions CI
+- manage test credentials securely with GitHub Actions Secrets
 - write automated response assertions
 - identify and document defects in Jira
 - preserve reproducible request/response evidence
