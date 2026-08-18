@@ -1,6 +1,33 @@
 # E-Commerce QA Portfolio
 
+[![Python API Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml)
+
 End-to-end QA portfolio project for the public Demoblaze e-commerce application. The project demonstrates a practical QA workflow from test planning and manual execution through Jira defect reporting, regression testing, API validation, Python API automation, GitHub Actions CI, SQL/backend validation planning, and UI automation planning.
+
+## Portfolio at a Glance
+
+| Area | Deliverable | Status |
+|---|---|---|
+| Test planning | QA test plan and functional test inventory | ✅ Complete |
+| Manual testing | 106 recorded executions | ✅ Complete |
+| Defect management | Jira defects EQAP-3 through EQAP-10 | ✅ Complete |
+| API testing | Postman collection and negative testing | ✅ Complete |
+| API automation | 7-test Python/Pytest suite | ✅ Complete |
+| CI/CD | GitHub Actions with HTML reporting | ✅ Complete |
+| Regression | Focused high-risk regression strategy | ✅ Complete |
+| SQL/backend | Validation planning | ✅ Documented |
+| UI automation | Automation roadmap | 📋 Planned |
+
+## Quick Navigation
+
+- [QA Test Plan](test-plan/QA-Test-Plan.md)
+- [Functional Test Cases](test-cases/functional-test-cases.md)
+- [Execution Results](test-summary/execution-results.md)
+- [Regression Strategy](regression/README.md)
+- [Postman API Collection](api-tests/Demoblaze-API-Tests.postman_collection.json)
+- [Python API Automation](python-api-tests/README.md)
+- [Jira Defect Reports](bug-reports/README.md)
+- [GitHub Actions Workflow](.github/workflows/python-api-tests.yml)
 
 ## Project Overview
 
@@ -203,6 +230,7 @@ E-Commerce-QA/
 ├── python-api-tests/
 │   ├── README.md
 │   ├── api_client.py
+│   ├── pytest.ini
 │   ├── requirements.txt
 │   └── tests/
 │       ├── conftest.py
