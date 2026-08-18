@@ -21,7 +21,9 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 - Browser refresh and navigation testing
 - REST API testing with Postman
 - Python API automation with Pytest and Requests
+- Reusable API-client and fixture design
 - GitHub Actions continuous integration
+- HTML automated test reporting
 - Response/status-code validation
 - Defect reporting and evidence management in Jira
 - SQL/backend validation planning
@@ -59,9 +61,9 @@ The working Postman collection is stored at [`api-tests/Demoblaze-API-Tests.post
 
 ### Python API automation
 
-The repository also contains a Python/Pytest API automation suite in [`python-api-tests/`](python-api-tests/).
+The repository contains a maintainable Python/Pytest API automation suite in [`python-api-tests/`](python-api-tests/).
 
-The current automated regression suite contains **6 passing tests** covering:
+The current automated regression suite contains **7 passing tests** covering:
 
 | Automated Test | Endpoint | Coverage |
 |---|---|---|
@@ -71,15 +73,9 @@ The current automated regression suite contains **6 passing tests** covering:
 | Add to cart | `POST /addtocart` | Authenticates and adds a test product |
 | View cart | `POST /viewcart` | Verifies the added product appears in the cart |
 | Delete cart item | `POST /deleteitem` | Removes the test item and verifies removal |
+| EQAP-10 regression | `POST /addtocart` | Reproduces and monitors the documented null-ID server error |
 
-Technology used:
-
-- Python 3.11
-- Pytest
-- Requests
-- Environment-based credentials
-- JSON response validation
-- HTTP status-code assertions
+The automation framework uses a reusable API client, Pytest fixtures, environment-based credentials, JSON validation, and HTTP assertions.
 
 Run the suite locally from the repository root with:
 
@@ -89,7 +85,11 @@ source .venv/bin/activate
 pytest -v
 ```
 
-Expected result for the current suite: **6 passed**.
+Generate an HTML report locally with:
+
+```bash
+pytest -v --html=reports/api-test-report.html --self-contained-html
+```
 
 ### GitHub Actions CI
 
@@ -101,20 +101,21 @@ The CI workflow:
 
 1. Checks out the repository
 2. Sets up Python 3.11
-3. Installs the pinned dependencies from `python-api-tests/requirements.txt`
+3. Installs pinned dependencies
 4. Loads Demoblaze credentials from GitHub Actions Secrets
 5. Executes the Pytest API suite
-6. Reports the pass/fail result in GitHub Actions
+6. Generates a self-contained HTML test report
+7. Uploads the report as a workflow artifact
 
-The current CI validation completed successfully with **6/6 API tests passing**.
-
-> Authentication credentials are stored as GitHub Actions Secrets and are not committed to the repository. The repository does not publish passwords, authentication tokens, or other secrets.
+Credentials are stored as GitHub Actions Secrets and are not committed to the repository.
 
 ## Confirmed API Defect
 
 **EQAP-10 — `/addtocart` returns HTTP 500 when request ID is null**
 
 The test reproduced a server-side HTTP 500 response for invalid client input. Postman assertions passed for the observed behavior, and the Jira defect includes request/response screenshots and reproduction details.
+
+The Python suite now includes an automated regression test that monitors this behavior so a future API change can be detected immediately.
 
 See [`bug-reports/EQAP-10.md`](bug-reports/EQAP-10.md) and [Jira EQAP-10](https://demrkmoore.atlassian.net/browse/EQAP-10).
 
@@ -166,6 +167,7 @@ Priority is given to high-risk flows such as:
 5. Checkout validation
 6. Empty-cart behavior
 7. Cart persistence across refresh/navigation
+8. API authentication and shopping-cart regression
 
 ## Jira Defects
 
@@ -200,11 +202,14 @@ E-Commerce-QA/
 │   └── README.md
 ├── python-api-tests/
 │   ├── README.md
+│   ├── api_client.py
 │   ├── requirements.txt
 │   └── tests/
+│       ├── conftest.py
 │       ├── test_authentication.py
 │       ├── test_authentication_negative.py
 │       ├── test_cart.py
+│       ├── test_cart_negative.py
 │       ├── test_delete_item.py
 │       ├── test_products.py
 │       └── test_view_cart.py
@@ -229,8 +234,8 @@ E-Commerce-QA/
 
 - **Jira** — defect tracking and test execution evidence
 - **Git / GitHub** — source control, CI, and portfolio presentation
-- **GitHub Actions** — continuous integration for automated API tests
-- **Postman** — API testing and automated response assertions
+- **GitHub Actions** — continuous integration and automated reporting
+- **Postman** — API testing and response assertions
 - **Python / Pytest** — API test automation
 - **Requests** — HTTP/API automation
 - **Chrome DevTools** — browser-level investigation
@@ -240,7 +245,7 @@ E-Commerce-QA/
 
 ## Automation Strategy
 
-The project does not attempt to automate every manual test. The automation strategy prioritizes high-frequency, high-risk regression flows and demonstrates both API-level automation and CI execution.
+The project does not attempt to automate every manual test. The automation strategy prioritizes high-frequency, high-risk regression flows and demonstrates API-level automation, reusable test design, defect regression monitoring, and CI execution.
 
 ### Current automation coverage
 
@@ -250,7 +255,9 @@ The project does not attempt to automate every manual test. The automation strat
 - Add-to-cart flow
 - View-cart verification
 - Delete-item flow
+- EQAP-10 API defect regression monitoring
 - Automated regression execution through GitHub Actions
+- HTML test reporting
 
 ### Future automation roadmap
 
@@ -274,12 +281,14 @@ This project demonstrates the ability to:
 - execute risk-based manual tests
 - perform boundary and negative testing
 - validate REST APIs with Postman
-- build Python API automation with Pytest and Requests
+- build maintainable Python API automation with Pytest and Requests
+- use reusable fixtures and client abstractions
 - integrate automated tests into GitHub Actions CI
+- generate and retain automated test reports
 - manage test credentials securely with GitHub Actions Secrets
-- write automated response assertions
 - identify and document defects in Jira
 - preserve reproducible request/response evidence
+- automate regression coverage for a confirmed API defect
 - retest defects and distinguish reproducible issues from non-reproducible behavior
 - build a focused regression strategy
 - plan SQL and UI automation coverage
