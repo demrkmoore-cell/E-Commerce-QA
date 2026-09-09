@@ -6,6 +6,8 @@ from pages.cart_page import CartPage
 def test_add_product_to_cart(page):
     home_page = HomePage(page)
     home_page.navigate()
+
+    expected_product = home_page.page.locator(".card-title").first.inner_text()
     home_page.select_first_product()
 
     product_page = ProductPage(page)
@@ -16,3 +18,4 @@ def test_add_product_to_cart(page):
     page.locator("#tbodyid tr").first.wait_for(state="visible")
 
     assert cart_page.item_count() > 0
+    assert page.locator("#tbodyid tr").first.locator("td").nth(1).inner_text() == expected_product
