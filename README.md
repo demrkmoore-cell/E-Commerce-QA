@@ -153,7 +153,7 @@ E-Commerce-QA/
 │   ├── pages/
 │   │   ├── __init__.py
 │   │   ├── home_page.py
-│   │   └── product_page.py
+│   │   ├── product_page.py
 │   │   └── cart_page.py
 │   └── tests/
 │       ├── test_homepage.py
