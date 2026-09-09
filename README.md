@@ -1,6 +1,6 @@
 # E-Commerce QA Portfolio
 
-[![Python API Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml)
+[![Python API Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml) [![Playwright UI Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/playwright-ui-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/playwright-ui-tests.yml)
 
 End-to-end QA portfolio project for the public Demoblaze e-commerce application. Demonstrates structured test planning, manual testing, Jira defect reporting, REST API testing, Python API automation, GitHub Actions CI, SQL/backend validation planning, and browser UI automation with Playwright.
 
@@ -28,7 +28,8 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 - [Python API Automation](python-api-tests/README.md)
 - [Playwright UI Automation](ui-tests/README.md)
 - [Jira Defect Reports](bug-reports/README.md)
-- [GitHub Actions Workflow](.github/workflows/python-api-tests.yml)
+- [GitHub Actions API Workflow](.github/workflows/python-api-tests.yml)
+- [GitHub Actions Playwright Workflow](.github/workflows/playwright-ui-tests.yml)
 
 ## Project Overview
 
@@ -91,7 +92,7 @@ A focused browser automation suite is included in [`ui-tests/`](ui-tests/).
 |---|---|
 | Homepage | Page load, title validation, dynamic product visibility |
 | Product selection | Product selection and product-details validation |
-| Add to cart | End-to-end product selection, cart addition, and cart verification |
+| Add to cart | End-to-end product selection, cart addition, and cart-content verification |
 
 The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**. The local suite completed with **3 passing tests**.
 
@@ -152,7 +153,7 @@ E-Commerce-QA/
 │   ├── pages/
 │   │   ├── __init__.py
 │   │   ├── home_page.py
-│   │   ├── product_page.py
+│   │   └── product_page.py
 │   │   └── cart_page.py
 │   └── tests/
 │       ├── test_homepage.py
@@ -160,7 +161,8 @@ E-Commerce-QA/
 │       └── test_add_to_cart.py
 ├── .github/
 │   └── workflows/
-│       └── python-api-tests.yml
+│       ├── python-api-tests.yml
+│       └── playwright-ui-tests.yml
 ├── bug-reports/
 ├── regression/
 ├── test-cases/
