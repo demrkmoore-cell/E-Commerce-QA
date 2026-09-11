@@ -16,7 +16,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | CI/CD | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
 | SQL/backend | Validation planning | ✅ Documented |
-| UI automation | 3-test Playwright/Pytest suite | ✅ Complete |
+| UI automation | 8-test Playwright/Pytest suite | ✅ Complete |
 
 ## Quick Navigation
 
@@ -56,6 +56,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 - Defect reporting and evidence management in Jira
 - SQL/backend validation planning
 - UI automation with Playwright and Chromium
+- Network interception and simulated backend-failure testing
 
 ## Execution Results
 
@@ -92,13 +93,18 @@ A focused browser automation suite is included in [`ui-tests/`](ui-tests/).
 |---|---|
 | Homepage | Page load, title validation, dynamic product visibility |
 | Product selection | Product selection and product-details validation |
-| Add to cart | End-to-end product selection, cart addition, and cart-content verification |
+| Product details | Title, price, and description validation |
+| Invalid product ID | Negative validation for nonexistent product input |
+| Malformed product ID | Negative validation for malformed product input |
+| Empty product ID | Boundary validation for missing product input |
+| Invalid route | HTTP 404 validation for an unknown application path |
+| API failure | Simulated HTTP 500 on the product endpoint and UI validation |
 
-The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**. The local suite completed with **3 passing tests**.
+The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**, with Playwright network interception for backend-failure simulation. The current local suite completes with **8 passing tests**.
 
-The UI automation is intentionally focused on high-value regression flows rather than attempting to automate the entire manual test inventory.
+The UI automation is intentionally focused on high-value scenarios rather than attempting to automate the entire manual test inventory.
 
-See [`ui-tests/README.md`](ui-tests/README.md) for setup, project structure, and execution instructions.
+See [`ui-tests/README.md`](ui-tests/README.md) for setup, project structure, coverage, and execution instructions.
 
 ## Confirmed API Defect
 
@@ -129,6 +135,7 @@ The focused regression strategy prioritizes:
 7. Cart persistence across refresh/navigation
 8. API authentication and shopping-cart regression
 9. High-value browser UI flows
+10. Frontend behavior when dependent API services fail
 
 See [`regression/README.md`](regression/README.md).
 
@@ -158,7 +165,12 @@ E-Commerce-QA/
 │   └── tests/
 │       ├── test_homepage.py
 │       ├── test_product_selection.py
-│       └── test_add_to_cart.py
+│       ├── test_product_details.py
+│       ├── test_invalid_product.py
+│       ├── test_malformed_product.py
+│       ├── test_empty_product_id.py
+│       ├── test_invalid_route.py
+│       └── test_api_failure.py
 ├── .github/
 │   └── workflows/
 │       ├── python-api-tests.yml
@@ -180,13 +192,14 @@ E-Commerce-QA/
 - **Requests** — HTTP/API automation
 - **Playwright / Chromium** — browser UI automation
 - **Page Object Model** — reusable UI test architecture
+- **Network interception** — simulated backend failure testing
 - **Chrome DevTools** — browser-level investigation
 - **SQL / PostgreSQL** — backend validation planning
 - **Markdown** — QA documentation
 
 ## Project Outcome
 
-This project demonstrates the ability to design structured test suites, execute risk-based manual tests, perform negative and boundary testing, validate REST APIs, build maintainable Python automation, automate browser workflows with Playwright, use reusable test abstractions, integrate automation into CI, document defects in Jira, and organize QA evidence for a professional portfolio.
+This project demonstrates the ability to design structured test suites, execute risk-based manual tests, perform negative and boundary testing, validate REST APIs, build maintainable Python automation, automate browser workflows with Playwright, simulate dependent-service failures, use reusable test abstractions, integrate automation into CI, document defects in Jira, and organize QA evidence for a professional portfolio.
 
 ## Author
 
