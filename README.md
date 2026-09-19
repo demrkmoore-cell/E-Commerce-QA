@@ -211,7 +211,8 @@ E-Commerce-QA/
 │       ├── test_empty_product_id.py
 │       ├── test_invalid_route.py
 │       ├── test_api_failure.py
-│       └── test_add_to_cart.py
+│       ├── test_add_to_cart.py
+│       └── test_cart_total.py
 ├── .github/
 │   └── workflows/
 │       ├── python-api-tests.yml
