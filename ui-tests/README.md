@@ -4,7 +4,7 @@ A focused Playwright UI automation suite for the public Demoblaze e-commerce app
 
 ## Coverage
 
-The suite currently covers 9 automated scenarios:
+The suite currently covers 10 automated scenarios:
 
 ### Positive coverage
 
@@ -20,6 +20,7 @@ The suite currently covers 9 automated scenarios:
 7. Empty product ID
 8. Invalid application route returning HTTP 404
 9. Product API failure simulation returning HTTP 500 and verifying that product cards are not rendered
+10. Cart total validation across product page, cart item, and calculated cart total
 
 The negative scenarios intentionally exercise invalid input, boundary conditions, HTTP error handling, and backend/API failure behavior.
 
@@ -49,6 +50,7 @@ ui-tests/
     ├── test_product_selection.py
     ├── test_product_details.py
     ├── test_add_to_cart.py
+    └── test_cart_total.py
     ├── test_invalid_product.py
     ├── test_malformed_product.py
     ├── test_empty_product_id.py
@@ -70,7 +72,7 @@ pytest -v
 
 ## Latest Local Result
 
-The suite was executed locally against Demoblaze with Chromium and completed with **9 passed** tests.
+The suite was executed locally against Demoblaze with Chromium and completed with **10 passed** tests.
 
 The automation uses condition-based waits for dynamically rendered content. The API-failure scenario uses Playwright network interception to simulate a server-side failure and validate the resulting UI state.
 
