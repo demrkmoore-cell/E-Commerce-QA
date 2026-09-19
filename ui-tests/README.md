@@ -4,21 +4,22 @@ A focused Playwright UI automation suite for the public Demoblaze e-commerce app
 
 ## Coverage
 
-The suite currently covers 8 automated scenarios:
+The suite currently covers 9 automated scenarios:
 
 ### Positive coverage
 
 1. Homepage product visibility
 2. Product selection and product-details validation
 3. Product detail content validation
+4. Add-to-cart workflow and selected product verification
 
 ### Negative coverage
 
-4. Nonexistent product ID
-5. Malformed product ID
-6. Empty product ID
-7. Invalid application route returning HTTP 404
-8. Product API failure simulation returning HTTP 500 and verifying that product cards are not rendered
+5. Nonexistent product ID
+6. Malformed product ID
+7. Empty product ID
+8. Invalid application route returning HTTP 404
+9. Product API failure simulation returning HTTP 500 and verifying that product cards are not rendered
 
 The negative scenarios intentionally exercise invalid input, boundary conditions, HTTP error handling, and backend/API failure behavior.
 
@@ -47,6 +48,7 @@ ui-tests/
     ├── test_homepage.py
     ├── test_product_selection.py
     ├── test_product_details.py
+    ├── test_add_to_cart.py
     ├── test_invalid_product.py
     ├── test_malformed_product.py
     ├── test_empty_product_id.py
@@ -68,7 +70,7 @@ pytest -v
 
 ## Latest Local Result
 
-The suite was executed locally against Demoblaze with Chromium and completed with **8 passed** tests.
+The suite was executed locally against Demoblaze with Chromium and completed with **9 passed** tests.
 
 The automation uses condition-based waits for dynamically rendered content. The API-failure scenario uses Playwright network interception to simulate a server-side failure and validate the resulting UI state.
 
@@ -76,4 +78,4 @@ The automation uses condition-based waits for dynamically rendered content. The 
 
 This UI layer complements the repository's API testing by demonstrating validation at both the API and browser levels. The suite uses reusable Page Objects for core product flows and includes negative testing for invalid product identifiers, malformed input, invalid routes, and simulated backend failure.
 
-The network-failure test is particularly useful for demonstrating that UI automation can validate frontend behavior when a dependent backend service returns an error.
+The add-to-cart test demonstrates an end-to-end user workflow by selecting a product, adding it to the cart, opening the cart, and verifying that the selected product appears. The network-failure test is particularly useful for demonstrating that UI automation can validate frontend behavior when a dependent backend service returns an error.
