@@ -14,9 +14,8 @@ def test_add_product_to_cart(page):
     page.locator(product_page.product_title).wait_for(state="visible")
     selected_product = product_page.get_title()
 
-    product_page.add_to_cart()
-
     page.on("dialog", lambda dialog: dialog.accept())
+    product_page.add_to_cart()
     cart_page.navigate()
 
     page.locator(cart_page.cart_items).first.wait_for(state="visible")
