@@ -16,7 +16,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | CI/CD | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
 | SQL/backend | Validation planning | ✅ Documented |
-| UI automation | 8-test Playwright/Pytest suite | ✅ Complete |
+| UI automation | 9-test Playwright/Pytest suite | ✅ Complete |
 
 ## Quick Navigation
 
@@ -99,12 +99,51 @@ A focused browser automation suite is included in [`ui-tests/`](ui-tests/).
 | Empty product ID | Boundary validation for missing product input |
 | Invalid route | HTTP 404 validation for an unknown application path |
 | API failure | Simulated HTTP 500 on the product endpoint and UI validation |
+| Add to cart | End-to-end product selection, cart navigation, and cart-item validation |
 
-The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**, with Playwright network interception for backend-failure simulation. The current local suite completes with **8 passing tests**.
+The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**, with Playwright network interception for backend-failure simulation. The current local suite completes with **9 passing tests**.
 
 The UI automation is intentionally focused on high-value scenarios rather than attempting to automate the entire manual test inventory.
 
 See [`ui-tests/README.md`](ui-tests/README.md) for setup, project structure, coverage, and execution instructions.
+
+## Run the Automated Tests
+
+The repository contains separate API and UI automation projects. Each project has its own `pytest.ini` configuration and should be run from its respective directory.
+
+### Playwright UI Automation
+
+From the repository root:
+
+```bash
+cd ui-tests
+python -m pip install -r requirements.txt
+python -m playwright install chromium
+pytest -v
+```
+
+For a live browser demonstration:
+
+```bash
+cd ui-tests
+pytest -v --headed
+```
+
+Expected result: **9 passed**.
+
+### Python API Automation
+
+From the repository root:
+
+```bash
+cd python-api-tests
+python -m pip install -r requirements.txt
+pytest -v
+```
+
+Expected result: **7 automated tests**.
+
+> **Important:** Do not run `pytest` from the repository root. The UI and API projects use separate pytest configurations and Python import paths, so run each suite from its own directory.
 
 ## Confirmed API Defect
 
@@ -170,7 +209,8 @@ E-Commerce-QA/
 │       ├── test_malformed_product.py
 │       ├── test_empty_product_id.py
 │       ├── test_invalid_route.py
-│       └── test_api_failure.py
+│       ├── test_api_failure.py
+│       └── test_add_to_cart.py
 ├── .github/
 │   └── workflows/
 │       ├── python-api-tests.yml
