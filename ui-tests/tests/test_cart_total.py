@@ -12,10 +12,12 @@ def test_cart_total_matches_selected_product_price(page):
     home_page.select_first_product()
 
     page.locator(product_page.product_title).wait_for(state="visible")
-    selected_price = product_page.get_price().replace("$", "").strip()
+    selected_price = product_page.get_price().replace("$", "").split("*")[0].strip()
 
     page.on("dialog", lambda dialog: dialog.accept())
     product_page.add_to_cart()
+
+    page.wait_for_timeout(1000)
     cart_page.navigate()
 
     page.locator(cart_page.cart_items).first.wait_for(state="visible")
