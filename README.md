@@ -16,7 +16,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | CI/CD | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
 | SQL/backend | Validation planning | ✅ Documented |
-| UI automation | 9-test Playwright/Pytest suite | ✅ Complete |
+| UI automation | 10-test Playwright/Pytest suite | ✅ Complete |
 
 ## Quick Navigation
 
@@ -100,8 +100,9 @@ A focused browser automation suite is included in [`ui-tests/`](ui-tests/).
 | Invalid route | HTTP 404 validation for an unknown application path |
 | API failure | Simulated HTTP 500 on the product endpoint and UI validation |
 | Add to cart | End-to-end product selection, cart navigation, and cart-item validation |
+| Cart total validation | Cross-checks product price, cart item price, and calculated cart total |
 
-The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**, with Playwright network interception for backend-failure simulation. The current local suite completes with **9 passing tests**.
+The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**, with Playwright network interception for backend-failure simulation. The current suite contains **10 automated tests**, including cross-page price and cart-total validation.
 
 The UI automation is intentionally focused on high-value scenarios rather than attempting to automate the entire manual test inventory.
 
@@ -129,7 +130,7 @@ cd ui-tests
 pytest -v --headed
 ```
 
-Expected result: **9 passed**.
+Expected result: **10 passed**.
 
 ### Python API Automation
 
