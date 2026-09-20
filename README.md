@@ -81,7 +81,7 @@ Techniques demonstrated include positive/negative testing, boundary and invalid-
 
 ### Python API automation
 
-The maintainable Python/Pytest suite is documented in [`python-api-tests/README.md`](python-api-tests/README.md). It contains **7 automated tests** using a reusable API client, fixtures, environment-based credentials, JSON validation, HTTP assertions, and GitHub Actions CI.
+The maintainable Python/Pytest suite is documented in [`python-api-tests/README.md`](python-api-tests/README.md). It contains **7 automated tests** using a reusable API client, fixtures, temporary self-provisioned test accounts, JSON validation, HTTP assertions, and GitHub Actions CI.
 
 ## UI Automation — Playwright
 
