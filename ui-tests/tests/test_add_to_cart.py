@@ -15,7 +15,16 @@ def test_add_product_to_cart(page):
     selected_product = product_page.get_title()
 
     page.on("dialog", lambda dialog: dialog.accept())
-    product_page.add_to_cart()
+
+    # Wait for the add-to-cart API request to complete before opening the cart.
+    # This prevents a CI timing race where cart.html loads before the item is persisted.
+    with page.expect_response(
+        lambda response: "/addtocart" in response.url
+        and response.request.method == "POST"
+        and response.status == 200
+    ):
+        product_page.add_to_cart()
+
     cart_page.navigate()
 
     page.locator(cart_page.cart_items).first.wait_for(state="visible")
