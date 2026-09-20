@@ -21,6 +21,12 @@ class DemoblazeAPIClient:
         kwargs.setdefault("timeout", 10)
         return self.session.get(f"{self.base_url}{endpoint}", **kwargs)
 
+    def signup(self, username: str, password: str) -> requests.Response:
+        return self.post(
+            "/signup",
+            json={"username": username, "password": password},
+        )
+
     def login(self, username: str, password: str) -> requests.Response:
         return self.post(
             "/login",
