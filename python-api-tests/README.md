@@ -4,7 +4,7 @@ Python API automation suite for the E-Commerce QA Portfolio project.
 
 ## Purpose
 
-This suite demonstrates maintainable API automation using **Python, Pytest, Requests, fixtures, reusable API-client methods, environment-based credentials, and GitHub Actions CI**.
+This suite demonstrates maintainable API automation using **Python, Pytest, Requests, fixtures, reusable API-client methods, temporary self-provisioned test accounts, and GitHub Actions CI**.
 
 ## Technology
 
@@ -23,7 +23,7 @@ This suite demonstrates maintainable API automation using **Python, Pytest, Requ
 
 | Test | Endpoint | Coverage |
 |---|---|---|
-| Authentication | `POST /login` | Validates successful authentication and token response |
+| Authentication | `POST /signup`, `POST /login` | Creates a temporary test account, authenticates, and validates the token response |
 | Authentication negative | `POST /login` | Validates invalid-password error handling |
 | Products | `GET /entries` | Validates product collection and required fields |
 | Add to Cart | `POST /addtocart` | Authenticates and adds a test product |
@@ -38,13 +38,14 @@ This suite demonstrates maintainable API automation using **Python, Pytest, Requ
 The suite uses a small reusable API client in [`api_client.py`](api_client.py) and shared Pytest fixtures in [`tests/conftest.py`](tests/conftest.py).
 
 - `DemoblazeAPIClient` centralizes HTTP requests and endpoint payloads.
-- `auth_token` provides authenticated tests with a reusable login fixture.
-- Credentials are read from environment variables instead of source code.
+- Each API test run generates a unique temporary username and password through the `test_credentials` fixture.
+- The authentication fixture automatically signs up the temporary account, logs in, and extracts the returned authentication token.
+- No pre-existing Demoblaze account credentials are required to run the API suite.
 - Each test focuses on behavior and assertions rather than repeated setup code.
 
 ## Test Workflow
 
-`Login → Add Product → View Cart → Delete Product → Verify Removal`
+`Create Temporary Account → Login → Add Product → View Cart → Delete Product → Verify Removal`
 
 ## Setup
 
@@ -57,14 +58,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Configure credentials through environment variables:
-
-```bash
-export DEMOBLAZE_USERNAME="your_username"
-export DEMOBLAZE_PASSWORD="your_password"
-```
-
-Do not commit real credentials, authentication tokens, or `.env` files.
+No account credentials or `.env` file are required. The test suite creates a unique temporary Demoblaze account automatically for authenticated API tests.
 
 ## Run Tests
 
@@ -90,17 +84,18 @@ CI performs the following steps:
 
 1. Checks out the repository.
 2. Installs Python 3.11 and pinned dependencies.
-3. Loads credentials from GitHub Actions Secrets.
-4. Runs all 7 API tests.
-5. Generates a self-contained HTML test report.
-6. Uploads the report as a GitHub Actions artifact even when tests fail.
+3. Runs the API test suite using temporary self-provisioned test accounts.
+4. Generates a self-contained HTML test report.
+5. Uploads the report as a GitHub Actions artifact even when tests fail.
+
+No GitHub Secrets are required for Demoblaze account credentials because the tests provision their own temporary accounts at runtime.
 
 ## Portfolio Value
 
 - API functional testing
 - Positive and negative testing
 - Authentication handling
-- Environment-based credentials
+- Temporary test-account provisioning
 - Reusable API-client design
 - Pytest fixtures
 - HTTP status validation
