@@ -49,13 +49,13 @@ ui-tests/
     ├── test_homepage.py
     ├── test_product_selection.py
     ├── test_product_details.py
-    ├── test_add_to_cart.py
-    └── test_cart_total.py
     ├── test_invalid_product.py
     ├── test_malformed_product.py
     ├── test_empty_product_id.py
     ├── test_invalid_route.py
-    └── test_api_failure.py
+    ├── test_api_failure.py
+    ├── test_add_to_cart.py
+    └── test_cart_total.py
 ```
 
 ## Local Setup
@@ -69,6 +69,12 @@ python -m pip install -r requirements.txt
 python -m playwright install chromium
 pytest -v
 ```
+
+## CI Verification
+
+The Playwright suite is also executed by GitHub Actions from the `ui-tests` directory using Python 3.11, Chromium, and the repository's `pytest.ini` configuration.
+
+The latest CI run for the current main-branch code completed with **10 passed** tests.
 
 ## Latest Local Result
 
