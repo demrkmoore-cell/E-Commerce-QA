@@ -13,7 +13,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | Defect management | Jira defects EQAP-3 through EQAP-10 | ✅ Complete |
 | API testing | Postman collection and negative testing | ✅ Complete |
 | API automation | 7-test Python/Pytest suite | ✅ Complete |
-| CI/CD | GitHub Actions with HTML reporting | ✅ Complete |
+| CI | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
 | SQL/backend | Validation planning | ✅ Documented |
 | UI automation | 10-test Playwright/Pytest suite | ✅ Complete |
