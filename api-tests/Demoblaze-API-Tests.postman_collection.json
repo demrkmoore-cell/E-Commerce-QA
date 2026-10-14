@@ -53,7 +53,36 @@
                 "entries"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Catalog request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Catalog response contains a non-empty Items array\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property(\"Items\").that.is.an(\"array\").and.is.not.empty;",
+                  "});",
+                  "pm.test(\"Catalog products contain required fields and valid prices\", function () {",
+                  "    const items = pm.response.json().Items;",
+                  "    items.forEach(function (item) {",
+                  "        pm.expect(item).to.have.property(\"id\");",
+                  "        pm.expect(String(item.id)).to.not.be.empty;",
+                  "        pm.expect(item.title).to.be.a(\"string\").and.not.be.empty;",
+                  "        pm.expect(Number(item.price)).to.be.above(0);",
+                  "        pm.expect(item).to.have.property(\"cat\");",
+                  "        pm.expect(item).to.have.property(\"desc\");",
+                  "        pm.expect(item).to.have.property(\"img\");",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "API-002 - Get Product By ID",
@@ -78,7 +107,30 @@
                 "view"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Product lookup returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response matches the requested product ID\", function () {",
+                  "    const product = pm.response.json();",
+                  "    pm.expect(product).to.have.property(\"id\");",
+                  "    pm.expect(String(product.id)).to.eql(String(pm.variables.get(\"productId\")));",
+                  "});",
+                  "pm.test(\"Product response contains a title and positive price\", function () {",
+                  "    const product = pm.response.json();",
+                  "    pm.expect(product.title).to.be.a(\"string\").and.not.be.empty;",
+                  "    pm.expect(Number(product.price)).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -113,18 +165,19 @@
             {
               "listen": "test",
               "script": {
+                "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Login request returns HTTP 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "",
-                  "const token = pm.response.text().replace(\"Auth_token:\", \"\").trim();",
-                  "if (token) {",
-                  "    pm.environment.set(\"authToken\", token);",
-                  "}",
-                  "console.log(\"Authentication token extracted and stored in authToken when present.\");"
-                ],
-                "type": "text/javascript"
+                  "pm.test(\"Successful login returns an authentication token\", function () {",
+                  "    const body = pm.response.text().trim();",
+                  "    pm.expect(body).to.match(/^Auth_token:\\s*\\S+$/);",
+                  "    const token = body.replace(/^Auth_token:\\s*/, \"\").trim();",
+                  "    pm.expect(token).to.not.be.empty;",
+                  "    pm.collectionVariables.set(\"authToken\", token);",
+                  "});"
+                ]
               }
             }
           ]
@@ -152,7 +205,25 @@
                 "signup"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Signup request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Signup response does not report a signup error\", function () {",
+                  "    const body = pm.response.text();",
+                  "    pm.expect(body.toLowerCase()).not.to.include(\"errorMessage\".toLowerCase());",
+                  "    pm.expect(body.toLowerCase()).not.to.include(\"this user already exist\");",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -187,12 +258,15 @@
             {
               "listen": "test",
               "script": {
+                "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Add to cart request returns HTTP 200\", function () {",
+                  "pm.test(\"Add-to-cart request returns HTTP 200\", function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Add-to-cart response confirms the item was added\", function () {",
+                  "    pm.expect(pm.response.text().trim()).to.eql(\"Item added.\");",
                   "});"
-                ],
-                "type": "text/javascript"
+                ]
               }
             }
           ]
@@ -220,7 +294,29 @@
                 "viewcart"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"View-cart request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cart response contains an Items array\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property(\"Items\").that.is.an(\"array\");",
+                  "});",
+                  "pm.test(\"Cart contains the item ID used by the add-to-cart request\", function () {",
+                  "    const body = pm.response.json();",
+                  "    const cartId = String(pm.variables.get(\"cartId\"));",
+                  "    pm.expect(body.Items.some(function (item) { return String(item.id) === cartId; })).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "API-007 - Delete Cart Item",
@@ -245,7 +341,44 @@
                 "deleteitem"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Delete-item request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Delete-item response confirms deletion\", function () {",
+                  "    pm.expect(pm.response.text().trim()).to.eql(\"Item deleted.\");",
+                  "});",
+                  "pm.test(\"Deleted item is absent from the cart\", function (done) {",
+                  "    const baseUrl = pm.variables.replaceIn(\"{{baseUrl}}\");",
+                  "    const cartId = pm.variables.get(\"cartId\");",
+                  "    const authToken = pm.variables.get(\"authToken\");",
+                  "    pm.sendRequest({",
+                  "        url: baseUrl + \"/viewcart\",",
+                  "        method: \"POST\",",
+                  "        header: {\"Content-Type\": \"application/json\"},",
+                  "        body: {",
+                  "            mode: \"raw\",",
+                  "            raw: JSON.stringify({id: cartId, cookie: \"Auth_token: \" + authToken})",
+                  "        }",
+                  "    }, function (error, response) {",
+                  "        pm.expect(error).to.equal(null);",
+                  "        pm.expect(response.code).to.eql(200);",
+                  "        const body = response.json();",
+                  "        pm.expect(body).to.have.property(\"Items\").that.is.an(\"array\");",
+                  "        pm.expect(body.Items.some(function (item) { return String(item.id) === String(cartId); })).to.be.false;",
+                  "        done();",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
