@@ -242,7 +242,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -283,7 +283,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\"\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/viewcart",
