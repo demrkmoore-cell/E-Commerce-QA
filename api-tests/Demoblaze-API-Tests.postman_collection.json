@@ -102,7 +102,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}}\n}" },
-            "url": { "raw": "{{baseUrl}}/deleteitem", "host": ["{{baseUrl}}], "path": ["deleteitem"] }
+            "url": { "raw": "{{baseUrl}}/deleteitem", "host": ["{{baseUrl}}"], "path": ["deleteitem"] }
           }
         }
       ]
@@ -116,7 +116,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"name\": \"DeMarko QA\",\n  \"country\": \"United States\",\n  \"city\": \"Des Moines\",\n  \"card\": \"1111\",\n  \"month\": \"12\",\n  \"year\": \"2026\"\n}" },
-            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}], "path": ["orders"] }
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] }
           }
         }
       ]
@@ -130,7 +130,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": null,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Null ID request returns HTTP 500\", function () {",
@@ -148,7 +148,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Empty ID request returns HTTP 500\", function () {",
@@ -166,7 +166,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": 12345,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Invalid ID type request returns HTTP 200\", function () {",
@@ -181,7 +181,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"INVALID_TOKEN\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Invalid auth token request returns HTTP 200\", function () {",
@@ -199,7 +199,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Missing cookie request returns HTTP 200\", function () {",
@@ -217,7 +217,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{ \"id\": \"{{cartId}}\", \"cookie\": \"{{authToken}}\", \"prod_id\": {{productId}}, " },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Malformed JSON request returns HTTP 400\", function () {",
@@ -235,7 +235,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Null product ID request returns HTTP 200\", function () {",
@@ -253,7 +253,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Zero product ID request returns HTTP 200\", function () {",
@@ -270,7 +270,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true,\n  \"unexpected_field\": \"INVALID\"\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Unexpected field request returns HTTP 200\", function () {",
@@ -285,7 +285,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999999999999999,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Extremely large product ID request returns HTTP 200\", function () {",
@@ -300,7 +300,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 1.5,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Decimal product ID request returns HTTP 200\", function () {",
@@ -315,7 +315,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
@@ -330,7 +330,7 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
           },
           "event": [{ "listen": "test", "script": { "exec": [
             "pm.test(\"Invalid product ID request returns HTTP 200\", function () {",
