@@ -106,7 +106,7 @@ Automate repeatable, high-value workflows using a maintainable test framework an
 | Primary Browser | Chromium/Chrome |
 | Secondary Browser | Firefox or another available supported browser |
 | Automation Language | Python |
-| UI Automation | Selenium or Playwright, based on final framework selection |
+| UI Automation | Playwright |
 | API Tool | Postman and/or Python requests |
 | Test Framework | Pytest |
 | Version Control | Git/GitHub |
