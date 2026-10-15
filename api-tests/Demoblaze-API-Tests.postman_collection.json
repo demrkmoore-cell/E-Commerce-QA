@@ -138,7 +138,50 @@
       "name": "02 - Authentication",
       "item": [
         {
-          "name": "API-003 - Login",
+          "name": "API-003 - Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "signup"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Signup request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Signup response does not report a signup error\", function () {",
+                  "    const body = pm.response.text();",
+                  "    pm.expect(body.toLowerCase()).not.to.include(\"errorMessage\".toLowerCase());",
+                  "    pm.expect(body.toLowerCase()).not.to.include(\"this user already exist\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-004 - Login",
           "request": {
             "method": "POST",
             "header": [
@@ -176,49 +219,6 @@
                   "    const token = body.replace(/^Auth_token:\\s*/, \"\").trim();",
                   "    pm.expect(token).to.not.be.empty;",
                   "    pm.collectionVariables.set(\"authToken\", token);",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "API-004 - Sign Up",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/signup",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "signup"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Signup request returns HTTP 200\", function () {",
-                  "    pm.response.to.have.status(200);",
-                  "});",
-                  "pm.test(\"Signup response does not report a signup error\", function () {",
-                  "    const body = pm.response.text();",
-                  "    pm.expect(body.toLowerCase()).not.to.include(\"errorMessage\".toLowerCase());",
-                  "    pm.expect(body.toLowerCase()).not.to.include(\"this user already exist\");",
                   "});"
                 ]
               }
@@ -498,10 +498,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Invalid ID type request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Observed behavior: API accepted a numeric request ID and returned HTTP 200.\");"
+                  "console.log(\"Observed HTTP 200; response semantics for a numeric cart ID are not asserted by this check.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -746,10 +746,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Unexpected field request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted unexpected request field 'unexpected_field' and processed the request successfully.\");"
+                  "console.log(\"Observed HTTP 200; this check does not establish whether the unexpected field was ignored or processed.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -785,10 +785,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Extremely large product ID request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted extremely large product ID and processed the request successfully.\");"
+                  "console.log(\"Observed HTTP 200; response semantics for the extremely large product ID are not asserted by this check.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -824,10 +824,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Decimal product ID request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted decimal product ID 1.5 and processed the request successfully.\");"
+                  "console.log(\"Observed HTTP 200; response semantics for the decimal product ID are not asserted by this check.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -863,10 +863,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted Boolean product ID true and processed the request successfully.\");"
+                  "console.log(\"Observed HTTP 200; response semantics for the Boolean product ID are not asserted by this check.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -902,10 +902,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Invalid product ID request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted invalid product ID 999999.\");"
+                  "console.log(\"Observed HTTP 200; this check does not establish whether the nonexistent product was added.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -913,6 +913,26 @@
           ]
         }
       ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get(\"username\")) {",
+          "    const suffix = Date.now() + \"_\" + Math.floor(Math.random() * 1000000);",
+          "    pm.collectionVariables.set(\"username\", \"qa_portfolio_\" + suffix);",
+          "}",
+          "if (!pm.collectionVariables.get(\"password\")) {",
+          "    pm.collectionVariables.set(\"password\", \"QaPortfolio!\" + Date.now());",
+          "}",
+          "if (!pm.collectionVariables.get(\"cartId\")) {",
+          "    pm.collectionVariables.set(\"cartId\", pm.variables.replaceIn(\"{{$guid}}\"));",
+          "}"
+        ]
+      }
     }
   ]
 }
