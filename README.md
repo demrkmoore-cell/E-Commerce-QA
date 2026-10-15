@@ -1,6 +1,6 @@
 # E-Commerce QA Portfolio
 
-[![Python API Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml) [![Playwright UI Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/playwright-ui-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/playwright-ui-tests.yml)
+[![Python API Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml) [![Playwright UI Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/playwright-ui-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/playwright-ui-tests.yml) [![Postman API Collection](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml)
 
 End-to-end QA portfolio project for the public Demoblaze e-commerce application. Demonstrates structured test planning, manual testing, Jira defect reporting, REST API testing, Python API automation, GitHub Actions CI, SQL/backend validation planning, and browser UI automation with Playwright.
 
@@ -11,7 +11,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | Test planning | QA test plan and functional test inventory | ✅ Complete |
 | Manual testing | 106 recorded executions | ✅ Complete |
 | Defect documentation | Confirmed defects EQAP-3–EQAP-8 and EQAP-10; EQAP-9 investigation | ✅ Complete |
-| API testing | Postman collection and negative testing | ✅ Complete |
+| API testing | Postman collection with scripted assertions; full collection run tracked in CI | 🔎 Verified by workflow status |
 | API automation | 7-test Python/Pytest suite | ✅ Complete |
 | CI | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
@@ -30,6 +30,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 - [Jira Defect Reports](bug-reports/README.md)
 - [GitHub Actions API Workflow](.github/workflows/python-api-tests.yml)
 - [GitHub Actions Playwright Workflow](.github/workflows/playwright-ui-tests.yml)
+- [GitHub Actions Postman/Newman Workflow](.github/workflows/postman-api-tests.yml)
 
 ## Project Overview
 
@@ -71,11 +72,11 @@ The detailed manual execution record is maintained in [`test-summary/execution-r
 
 ## API Testing
 
-API testing was executed against the public Demoblaze API using Postman and Python automation. Coverage includes authentication, product/catalog operations, shopping-cart operations, and negative scenarios.
+API coverage is split between the Python/Pytest suite and a Postman collection. The Postman collection includes scripted assertions for catalog, authentication, cart operations, and negative-input scenarios. Its GitHub Actions workflow runs the collection with Newman against the public Demoblaze API; consult the latest workflow run for the actual result. The collection is not described as passing unless that run succeeds.
 
 ### Postman
 
-The working collection is stored at [`api-tests/Demoblaze-API-Tests.postman_collection.json`](api-tests/Demoblaze-API-Tests.postman_collection.json).
+The collection is stored at [`api-tests/Demoblaze-API-Tests.postman_collection.json`](api-tests/Demoblaze-API-Tests.postman_collection.json). It generates local demo credentials and a cart ID at runtime, so the collection can be run without committing credentials. Run details are in [`api-tests/README.md`](api-tests/README.md).
 
 Techniques demonstrated include positive/negative testing, boundary and invalid-input testing, authentication/token validation, HTTP status assertions, response-body assertions, Postman test scripting, and reproducible defect evidence.
 
