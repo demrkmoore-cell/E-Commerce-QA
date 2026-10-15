@@ -70,9 +70,19 @@ python -m playwright install chromium
 pytest -v
 ```
 
+## Live Browser Demo
+
+To demonstrate the tests interacting with Demoblaze in a visible Chromium window, run this from the `ui-tests` directory with the project environment activated:
+
+```bash
+pytest -v --headed --browser chromium
+```
+
+Expected result: **10 passed**. The `--headed` option opens a visible browser; without it, Playwright runs headlessly by default.
+
 ## CI Verification
 
-The Playwright suite is also executed by GitHub Actions from the `ui-tests` directory using Python 3.11, Chromium, and the repository's `pytest.ini` configuration.
+The Playwright suite is also executed by GitHub Actions from the `ui-tests` directory using Python 3.11, Chromium, and the repository's `pytest.ini` configuration. CI runs the suite headlessly.
 
 The latest CI run for the current main-branch code completed with **10 passed** tests.
 
