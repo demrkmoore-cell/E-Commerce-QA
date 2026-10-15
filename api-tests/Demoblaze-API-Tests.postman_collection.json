@@ -249,7 +249,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -290,7 +290,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\"\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/viewcart",
@@ -371,7 +371,7 @@
                   "        header: {\"Content-Type\": \"application/json\"},",
                   "        body: {",
                   "            mode: \"raw\",",
-                  "            raw: JSON.stringify({id: cartId, cookie: \"Auth_token: \" + authToken})",
+                  "            raw: JSON.stringify({id: cartId, cookie: authToken})",
                   "        }",
                   "    }, function (error, response) {",
                   "        pm.expect(error).to.equal(null);",
@@ -404,7 +404,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": null,\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": null,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -446,7 +446,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -488,7 +488,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 12345,\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": 12345,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -611,7 +611,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"id\": \"{{cartId}}\", \"cookie\": \"Auth_token: {{authToken}}\", \"prod_id\": {{productId}}, "
+              "raw": "{ \"id\": \"{{cartId}}\", \"cookie\": \"{{authToken}}\", \"prod_id\": {{productId}}, "
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -653,7 +653,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -695,7 +695,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -736,7 +736,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true,\n  \"unexpected_field\": \"INVALID\"\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true,\n  \"unexpected_field\": \"INVALID\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -775,7 +775,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": 999999999999999999,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999999999999999,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -814,7 +814,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": 1.5,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 1.5,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -853,7 +853,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -892,7 +892,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
