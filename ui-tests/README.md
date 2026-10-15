@@ -58,33 +58,53 @@ ui-tests/
     └── test_cart_total.py
 ```
 
-## Local Setup
+## Setup (Windows, macOS, or Linux)
 
-From the `ui-tests` directory:
+Prerequisites: Git and Python 3.11 installed. Open a terminal and clone the repository, then enter the UI test directory:
+
+```bash
+git clone https://github.com/demrkmoore-cell/E-Commerce-QA.git
+cd E-Commerce-QA/ui-tests
+```
+
+Create and activate a virtual environment.
+
+**macOS / Linux / ChromeOS Linux:**
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+**Windows PowerShell:**
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Install the dependencies and Chromium browser:
+
+```bash
 python -m pip install -r requirements.txt
 python -m playwright install chromium
-pytest -v
 ```
 
 ## Live Browser Demo
 
-To demonstrate the tests interacting with Demoblaze in a visible Chromium window, run this from the `ui-tests` directory with the project environment activated:
+With the virtual environment activated and dependencies installed, run this command from the `ui-tests` directory:
 
 ```bash
-pytest -v --headed --browser chromium
+python -m pytest -v --headed --browser chromium
 ```
 
-Expected result: **10 passed**. The `--headed` option opens a visible browser; without it, Playwright runs headlessly by default.
+The `--headed` option opens a visible Chromium window while the tests run. Expected result: **10 passed**. To run without opening a visible browser, omit `--headed`.
+
+**Display note:** A visible browser requires a desktop session/display. On a headless machine or CI runner, use `python -m pytest -v --browser chromium` instead; CI runs headlessly by design.
 
 ## CI Verification
 
-The Playwright suite is also executed by GitHub Actions from the `ui-tests` directory using Python 3.11, Chromium, and the repository's `pytest.ini` configuration. CI runs the suite headlessly.
-
-The latest CI run for the current main-branch code completed with **10 passed** tests.
+The Playwright suite is also executed by GitHub Actions from the `ui-tests` directory using Python 3.11 and Chromium. CI runs the suite headlessly.
 
 ## Latest Local Result
 
