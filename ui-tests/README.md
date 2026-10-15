@@ -60,7 +60,7 @@ ui-tests/
 
 ## Setup (Windows, macOS, or Linux)
 
-Prerequisites: Git and Python 3.11 installed. Open a terminal and clone the repository, then enter the UI test directory:
+Prerequisites: Git and Python 3.11 installed. Clone the repository, then enter the UI test directory:
 
 ```bash
 git clone https://github.com/demrkmoore-cell/E-Commerce-QA.git
@@ -90,21 +90,27 @@ python -m pip install -r requirements.txt
 python -m playwright install chromium
 ```
 
-## Live Browser Demo
+## Run the tests
 
-With the virtual environment activated and dependencies installed, run this command from the `ui-tests` directory:
+Run the suite headlessly (no visible browser window):
+
+```bash
+python -m pytest -v --browser chromium
+```
+
+Run the suite with a visible Chromium browser:
 
 ```bash
 python -m pytest -v --headed --browser chromium
 ```
 
-The `--headed` option opens a visible Chromium window while the tests run. Expected result: **10 passed**. To run without opening a visible browser, omit `--headed`.
+The `--headed` option opens a visible browser window while the tests run. Both commands run the same test suite; only the browser display mode changes.
 
-**Display note:** A visible browser requires a desktop session/display. On a headless machine or CI runner, use `python -m pytest -v --browser chromium` instead; CI runs headlessly by design.
+**Display note:** Headed mode requires an available desktop session/display. On a headless machine or CI runner, use the headless command.
 
-## CI Verification
+## Cross-platform CI
 
-The Playwright suite is also executed by GitHub Actions from the `ui-tests` directory using Python 3.11 and Chromium. CI runs the suite headlessly.
+GitHub Actions is configured to run the headless Chromium suite on **Ubuntu, Windows, and macOS** with Python 3.11. Each operating system runs the same test command. Check the [Playwright UI Tests workflow](../actions/workflows/playwright-ui-tests.yml) for the latest per-platform results; cross-platform compatibility is not confirmed until those workflow runs finish successfully.
 
 ## Latest Local Result
 
