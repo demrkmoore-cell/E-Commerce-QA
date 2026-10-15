@@ -11,7 +11,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | Test planning | QA test plan and functional test inventory | ✅ Complete |
 | Manual testing | 106 recorded executions | ✅ Complete |
 | Defect documentation | Confirmed defects EQAP-3–EQAP-8 and EQAP-10; EQAP-9 investigation | ✅ Complete |
-| API testing | Postman collection with scripted assertions; full collection run tracked in CI | 🔎 Verified by workflow status |
+| API testing | Postman collection with scripted assertions and a live Newman CI run | See [latest workflow result](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml) |
 | API automation | 7-test Python/Pytest suite | ✅ Complete |
 | CI | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
