@@ -270,9 +270,7 @@
                   "pm.test(\"Add-to-cart request returns HTTP 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.test(\"Add-to-cart response confirms the item was added\", function () {",
-                  "    pm.expect(pm.response.text().trim()).to.eql(\"Item added.\");",
-                  "});"
+                  "console.log(\"The following View Cart request verifies whether the item was added.\");"
                 ]
               }
             }
@@ -290,7 +288,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\"\n}"
+              "raw": "{\n  \"cookie\": \"{{authToken}}\",\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/viewcart",
@@ -337,7 +335,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}}\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/deleteitem",
@@ -359,7 +357,7 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Delete-item response confirms deletion\", function () {",
-                  "    pm.expect(pm.response.text().trim()).to.eql(\"Item deleted.\");",
+                  "    pm.expect(pm.response.json()).to.eql(\"Item deleted.\");",
                   "});",
                   "pm.test(\"Deleted item is absent from the cart\", function (done) {",
                   "    const baseUrl = pm.variables.replaceIn(\"{{baseUrl}}\");",
@@ -371,7 +369,7 @@
                   "        header: {\"Content-Type\": \"application/json\"},",
                   "        body: {",
                   "            mode: \"raw\",",
-                  "            raw: JSON.stringify({id: cartId, cookie: authToken})",
+                  "            raw: JSON.stringify({cookie: authToken, flag: true})",
                   "        }",
                   "    }, function (error, response) {",
                   "        pm.expect(error).to.equal(null);",
