@@ -214,11 +214,18 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Successful login returns an authentication token\", function () {",
-                  "    const body = pm.response.text().trim();",
-                  "    pm.expect(body).to.match(/^Auth_token:\\s*\\S+$/);",
-                  "    const token = body.replace(/^Auth_token:\\s*/, \"\").trim();",
+                  "    let body;",
+                  "    try {",
+                  "        const parsed = pm.response.json();",
+                  "        body = typeof parsed === \"string\" ? parsed.trim() : pm.response.text().trim();",
+                  "    } catch (error) {",
+                  "        body = pm.response.text().trim();",
+                  "    }",
+                  "    pm.expect(body).to.match(/^Auth_token:\\\\s*\\\\S+$/);",
+                  "    const token = body.replace(/^Auth_token:\\\\s*/, \"\").trim();",
                   "    pm.expect(token).to.not.be.empty;",
                   "    pm.collectionVariables.set(\"authToken\", token);",
+                  "    pm.expect(pm.collectionVariables.get(\"authToken\")).to.eql(token);",
                   "});"
                 ]
               }
