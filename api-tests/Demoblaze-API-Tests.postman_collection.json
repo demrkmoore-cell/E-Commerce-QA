@@ -138,52 +138,7 @@
       "name": "02 - Authentication",
       "item": [
         {
-          "name": "API-003 - Login",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Login request returns HTTP 200\", function () {",
-                  "    pm.response.to.have.status(200);",
-                  "});",
-                  "pm.test(\"Successful login returns an authentication token\", function () {",
-                  "    const body = pm.response.text().trim();",
-                  "    pm.expect(body).to.match(/^Auth_token:\\s*\\S+$/);",
-                  "    const token = body.replace(/^Auth_token:\\s*/, \"\").trim();",
-                  "    pm.expect(token).to.not.be.empty;",
-                  "    pm.collectionVariables.set(\"authToken\", token);",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "API-004 - Sign Up",
+          "name": "API-003 - Sign Up",
           "request": {
             "method": "POST",
             "header": [
@@ -224,6 +179,58 @@
               }
             }
           ]
+        },
+        {
+          "name": "API-004 - Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Successful login returns an authentication token\", function () {",
+                  "    let body;",
+                  "    try {",
+                  "        const parsed = pm.response.json();",
+                  "        body = typeof parsed === \"string\" ? parsed.trim() : pm.response.text().trim();",
+                  "    } catch (error) {",
+                  "        body = pm.response.text().trim();",
+                  "    }",
+                  "    pm.expect(body).to.match(/^Auth_token:\\s*\\S+$/);",
+                  "    const token = body.replace(/^Auth_token:\\s*/, \"\").trim();",
+                  "    pm.expect(token).to.not.be.empty;",
+                  "    pm.collectionVariables.set(\"authToken\", token);",
+                  "    pm.expect(pm.collectionVariables.get(\"authToken\")).to.eql(token);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -242,7 +249,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -263,9 +270,7 @@
                   "pm.test(\"Add-to-cart request returns HTTP 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.test(\"Add-to-cart response confirms the item was added\", function () {",
-                  "    pm.expect(pm.response.text().trim()).to.eql(\"Item added.\");",
-                  "});"
+                  "console.log(\"The following View Cart request verifies whether the item was added.\");"
                 ]
               }
             }
@@ -283,7 +288,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\"\n}"
+              "raw": "{\n  \"cookie\": \"{{authToken}}\",\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/viewcart",
@@ -330,7 +335,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}}\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/deleteitem",
@@ -352,7 +357,7 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Delete-item response confirms deletion\", function () {",
-                  "    pm.expect(pm.response.text().trim()).to.eql(\"Item deleted.\");",
+                  "    pm.expect(pm.response.json()).to.eql(\"Item deleted.\");",
                   "});",
                   "pm.test(\"Deleted item is absent from the cart\", function (done) {",
                   "    const baseUrl = pm.variables.replaceIn(\"{{baseUrl}}\");",
@@ -364,7 +369,7 @@
                   "        header: {\"Content-Type\": \"application/json\"},",
                   "        body: {",
                   "            mode: \"raw\",",
-                  "            raw: JSON.stringify({id: cartId, cookie: \"Auth_token: \" + authToken})",
+                  "            raw: JSON.stringify({cookie: authToken, flag: true})",
                   "        }",
                   "    }, function (error, response) {",
                   "        pm.expect(error).to.equal(null);",
@@ -397,7 +402,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": null,\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": null,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -439,7 +444,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -481,7 +486,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 12345,\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": 12345,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -498,10 +503,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Invalid ID type request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Observed behavior: API accepted a numeric request ID and returned HTTP 200.\");"
+                  "console.log(\"Observed HTTP 200; response semantics for a numeric cart ID are not asserted by this check.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -604,7 +609,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"id\": \"{{cartId}}\", \"cookie\": \"Auth_token: {{authToken}}\", \"prod_id\": {{productId}}, "
+              "raw": "{ \"id\": \"{{cartId}}\", \"cookie\": \"{{authToken}}\", \"prod_id\": {{productId}}, "
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -646,7 +651,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -688,7 +693,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -729,7 +734,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true,\n  \"unexpected_field\": \"INVALID\"\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true,\n  \"unexpected_field\": \"INVALID\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -746,10 +751,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Unexpected field request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted unexpected request field 'unexpected_field' and processed the request successfully.\");"
+                  "console.log(\"Observed HTTP 200; this check does not establish whether the unexpected field was ignored or processed.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -768,7 +773,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": 999999999999999999,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999999999999999,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -785,10 +790,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Extremely large product ID request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted extremely large product ID and processed the request successfully.\");"
+                  "console.log(\"Observed HTTP 200; response semantics for the extremely large product ID are not asserted by this check.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -807,7 +812,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": 1.5,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 1.5,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -824,10 +829,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Decimal product ID request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted decimal product ID 1.5 and processed the request successfully.\");"
+                  "console.log(\"Observed HTTP 200; response semantics for the decimal product ID are not asserted by this check.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -846,7 +851,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -863,10 +868,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted Boolean product ID true and processed the request successfully.\");"
+                  "console.log(\"Observed HTTP 200; response semantics for the Boolean product ID are not asserted by this check.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -885,7 +890,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"Auth_token: {{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}"
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/addtocart",
@@ -902,10 +907,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Invalid product ID request returns HTTP 200\", function () {",
+                  "pm.test(\"Observed HTTP status is 200; response semantics are not asserted\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "console.log(\"Potential defect: API accepted invalid product ID 999999.\");"
+                  "console.log(\"Observed HTTP 200; this check does not establish whether the nonexistent product was added.\");"
                 ],
                 "type": "text/javascript"
               }
@@ -913,6 +918,26 @@
           ]
         }
       ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get(\"username\")) {",
+          "    const suffix = Date.now() + \"_\" + Math.floor(Math.random() * 1000000);",
+          "    pm.collectionVariables.set(\"username\", \"qa_portfolio_\" + suffix);",
+          "}",
+          "if (!pm.collectionVariables.get(\"password\")) {",
+          "    pm.collectionVariables.set(\"password\", \"QaPortfolio!\" + Date.now());",
+          "}",
+          "if (!pm.collectionVariables.get(\"cartId\")) {",
+          "    pm.collectionVariables.set(\"cartId\", pm.variables.replaceIn(\"{{$guid}}\"));",
+          "}"
+        ]
+      }
     }
   ]
 }
