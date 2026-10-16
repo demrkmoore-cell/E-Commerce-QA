@@ -7,7 +7,10 @@ class CartPage:
         self.cart_items = "#tbodyid tr"
 
     def navigate(self):
-        self.page.goto("https://www.demoblaze.com/cart.html")
+        self.page.goto(
+            "https://www.demoblaze.com/cart.html",
+            wait_until="domcontentloaded",
+        )
 
     def item_count(self):
         return self.page.locator(self.cart_items).count()

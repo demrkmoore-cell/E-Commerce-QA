@@ -9,6 +9,10 @@ def test_product_details_are_displayed(page):
 
     product_page = ProductPage(page)
 
+    page.locator(product_page.product_title).wait_for(state="visible")
+    page.locator("#tbodyid h3").wait_for(state="visible")
+    page.locator("#more-information").wait_for(state="visible")
+
     assert product_page.get_title() != ""
     assert product_page.get_price() != ""
     assert product_page.get_description() != ""
