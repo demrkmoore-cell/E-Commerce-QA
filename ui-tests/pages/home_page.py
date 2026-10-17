@@ -8,7 +8,7 @@ class HomePage:
         self.product_cards = ".card"
 
     def navigate(self):
-        self.page.goto(self.url)
+        self.page.goto(self.url, wait_until="domcontentloaded")
         self.page.locator(self.product_cards).first.wait_for(state="visible")
 
     def product_count(self):

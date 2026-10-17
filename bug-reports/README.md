@@ -13,6 +13,7 @@ This directory contains portfolio-ready defect documentation from the Demoblaze 
 | [EQAP-7](./EQAP-7.md) | Checkout accepts invalid/expired expiration year | High | Confirmed |
 | [EQAP-8](./EQAP-8.md) | Checkout can be initiated with an empty cart | High | Confirmed |
 | [EQAP-10](./EQAP-10.md) | `/addtocart` returns HTTP 500 when request ID is null | Medium | Confirmed API defect |
+| [Local report](./INVALID-PRODUCT-UI.md) — Jira not filed | Invalid product ID renders undefined product data | Medium | Confirmed UI defect |
 
 ## Investigation / Non-Reproducible
 

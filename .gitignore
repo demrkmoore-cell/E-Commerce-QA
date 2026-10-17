@@ -219,3 +219,8 @@ __marimo__/
 
 # Generated local API test reports
 /python-api-tests/reports/
+
+# Local QA audit backups — do not publish
+/api-tests/Demoblaze-API-Tests.before-url-fix.json
+/api-tests/Demoblaze-API-Tests.postman_collection.json.bak
+/ui-tests/pages/home_page.py.bak
