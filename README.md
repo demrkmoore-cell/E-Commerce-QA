@@ -16,7 +16,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | CI | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
 | SQL/backend | Validation planning | ✅ Documented |
-| UI automation | 10-test Playwright/Pytest suite | ✅ Complete |
+| UI automation | 10 browser tests plus 1 API-level regression test | ✅ Complete |
 
 ## Quick Navigation
 
@@ -103,7 +103,7 @@ A focused browser automation suite is included in [`ui-tests/`](ui-tests/).
 | Add to cart | End-to-end product selection, cart navigation, and cart-item validation |
 | Cart total validation | Cross-checks product price, cart item price, and calculated cart total |
 
-The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**, with Playwright network interception for backend-failure simulation. The current suite contains **10 automated tests**, including cross-page price and cart-total validation.
+The suite uses **Python, Pytest, Playwright, Chromium, and the Page Object Model**, with Playwright network interception for backend-failure simulation. It contains **11 automated test functions: 10 browser/UI tests and 1 API-level regression test** for the nonexistent-product response. The last verified local result was **10 passed, 1 xfailed**; the expected failure documents the known invalid-product UI defect.
 
 The UI automation is intentionally focused on high-value scenarios rather than attempting to automate the entire manual test inventory.
 
@@ -131,7 +131,7 @@ cd ui-tests
 pytest -v --headed
 ```
 
-Expected result: **10 passed**.
+The last verified local result was **10 passed, 1 xfailed**. Results may vary if the application or test environment changes.
 
 ### Python API Automation
 
@@ -208,6 +208,7 @@ E-Commerce-QA/
 │       ├── test_product_selection.py
 │       ├── test_product_details.py
 │       ├── test_invalid_product.py
+│       ├── test_invalid_product_api.py
 │       ├── test_malformed_product.py
 │       ├── test_empty_product_id.py
 │       ├── test_invalid_route.py
