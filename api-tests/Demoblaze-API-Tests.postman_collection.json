@@ -263,12 +263,65 @@
           },
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const token = String(",
+                  "    pm.collectionVariables.get(\"authToken\") || \"\"",
+                  ").trim().replace(/^[\"']+|[\"']+$/g, \"\");",
+                  "",
+                  "const productId = Number(",
+                  "    pm.variables.replaceIn(\"{{productId}}\")",
+                  ");",
+                  "const cartId = pm.variables.replaceIn(\"{{$guid}}\");",
+                  "",
+                  "if (!token) {",
+                  "    throw new Error(\"Missing authToken. Run the Login request first.\");",
+                  "}",
+                  "",
+                  "if (!Number.isInteger(productId) || productId <= 0) {",
+                  "    throw new Error(\"productId must resolve to a positive integer.\");",
+                  "}",
+                  "",
+                  "const payload = {",
+                  "    id: cartId,",
+                  "    cookie: token,",
+                  "    prod_id: productId,",
+                  "    flag: true",
+                  "};",
+                  "",
+                  "pm.request.body.update({",
+                  "    mode: \"raw\",",
+                  "    raw: JSON.stringify(payload)",
+                  "});",
+                  "",
+                  "console.log(\"=== Cart Request Validation ===\");",
+                  "console.log(\"Cart ID present:\", Boolean(cartId));",
+                  "console.log(\"Product ID:\", productId);",
+                  "console.log(\"Token present:\", Boolean(token));",
+                  "console.log(\"Payload is valid JSON:\", (() => {",
+                  "    try {",
+                  "        JSON.parse(JSON.stringify(payload));",
+                  "        return true;",
+                  "    } catch (error) {",
+                  "        return false;",
+                  "    }",
+                  "})());",
+                  "console.log(\"=== End Validation ===\");"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Add-to-cart request returns HTTP 200\", function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Add-to-cart response confirms item was added\", function () {",
+                  "    pm.expect(pm.response.text().trim()).to.eql(\"Item added.\");",
                   "});",
                   "console.log(\"The following View Cart request verifies whether the item was added.\");"
                 ]
