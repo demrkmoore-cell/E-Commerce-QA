@@ -275,6 +275,7 @@
                   "    pm.variables.replaceIn(\"{{productId}}\")",
                   ");",
                   "const cartId = pm.variables.replaceIn(\"{{$guid}}\");",
+                  "pm.collectionVariables.set(\"cartId\", cartId);",
                   "",
                   "if (!token) {",
                   "    throw new Error(\"Missing authToken. Run the Login request first.\");",
