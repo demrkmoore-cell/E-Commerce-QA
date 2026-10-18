@@ -321,8 +321,8 @@
                   "pm.test(\"Add-to-cart request returns HTTP 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.test(\"Add-to-cart response confirms item was added\", function () {",
-                  "    pm.expect(pm.response.text().trim()).to.eql(\"Item added.\");",
+                  "pm.test(\"Add-to-cart response body is empty\", function () {",
+                  "    pm.expect(pm.response.text().trim()).to.eql(\"\");",
                   "});",
                   "console.log(\"The following View Cart request verifies whether the item was added.\");"
                 ]
