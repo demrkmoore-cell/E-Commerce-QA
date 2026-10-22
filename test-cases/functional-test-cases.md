@@ -9,7 +9,7 @@
 | Jira Project | EQAP |
 | Jira Task | EQAP-2 — Create Functional Test Cases |
 | Test Type | Functional |
-| Test Suite Status | In Progress |
+| Test Suite Status | Designed Test Inventory |
 | Owner | DeMarko Moore |
 
 ## Test Case Format
@@ -27,7 +27,7 @@ Each test case contains:
 - Actual Result
 - Status
 
-**Execution status:** Not Run unless otherwise documented.
+**Execution status:** This document is the designed functional test inventory. Individual execution status is recorded per test case and is **Not Run** unless otherwise documented. Completed manual execution results are maintained separately in the test execution summary.
 
 ---
 
@@ -242,7 +242,7 @@ Each test case contains:
 
 ## Execution Notes
 
-These cases are currently **Not Run**. Actual results will be recorded after execution against the Demoblaze application.
+These cases are currently **Not Run** in this test-case design document. Completed manual execution results are maintained separately in the test execution summary.
 
 Additional functional coverage will be added for:
 
@@ -433,7 +433,7 @@ Additional functional coverage will be added for:
 
 ## Execution Notes
 
-These Navigation & Categories cases are currently **Not Run**. Actual results will be recorded during test execution against the Demoblaze application.
+These Navigation & Categories cases are currently **Not Run** in this test-case design document. Completed manual execution results are maintained separately in the test execution summary.
 
 Next planned coverage:
 
@@ -832,7 +832,7 @@ Next planned coverage:
 
 ## Execution Notes
 
-Shopping Cart cases are currently **Not Run**. Actual results will be recorded during execution against the Demoblaze application.
+Shopping Cart cases are currently **Not Run** in this test-case design document. Completed manual execution results are maintained separately in the test execution summary.
 
 Next planned coverage:
 
@@ -1038,7 +1038,7 @@ Next planned coverage:
 
 ## Execution Notes
 
-Checkout & Orders cases are currently **Not Run**. Actual results will be recorded during execution against the Demoblaze application.
+Checkout & Orders cases are currently **Not Run** in this test-case design document. Completed manual execution results are maintained separately in the test execution summary.
 
 The next planned section will focus on **Negative & Boundary Scenarios** and will provide additional risk-based coverage beyond the primary customer workflows.
 
@@ -1264,7 +1264,7 @@ The next planned section will focus on **Negative & Boundary Scenarios** and wil
 
 ## Functional Test Suite Status
 
-**Current Status:** Test cases designed — execution pending.
+**Current Status:** Designed test inventory — individual execution status is tracked per test case. Completed manual execution results are maintained separately.
 
 The 83 test cases provide coverage across the application's primary customer workflows, validation scenarios, negative scenarios, boundary conditions, and transaction flow.
 

@@ -1,108 +1,63 @@
-# API Testing
+# Postman API Testing
 
 ## Scope
 
-This section documents API-level validation for the public Demoblaze e-commerce application using Postman.
+This collection exercises the public Demoblaze e-commerce API at `https://api.demoblaze.com`. It is a portfolio demonstration against a third-party demo service, not a production API or a service controlled by this repository.
 
-**Base URL:** `https://api.demoblaze.com`
+## Run the collection
 
-## API Test Objectives
+### In Postman
 
-- Validate successful product retrieval.
-- Validate authentication and token handling.
-- Validate shopping-cart requests with valid and invalid input.
-- Validate HTTP status codes and response bodies.
-- Validate error messages and server-side input handling.
-- Use Postman assertions to make observed behavior reproducible.
-- Link confirmed defects to Jira.
-- Keep authentication credentials and tokens out of the repository.
+1. Import `Demoblaze-API-Tests.postman_collection.json`.
+2. Use the collection's default variables or set `baseUrl` to `https://api.demoblaze.com`.
+3. Do not create environment variables with the same names as the collection variables unless you intend to override them. Postman environment values take precedence over collection values.
+4. Run the entire collection in order. The collection-level pre-request script creates a unique demo username, password, and cart ID at runtime when those values are blank.
+5. The Authentication folder signs up before logging in. The login test stores the returned token in the collection variable `authToken`. The cart flow then adds an item, checks the cart, and deletes the item.
+6. Review each request's **Test Results** and the collection run summary. An HTTP status by itself does not prove that a business operation succeeded.
 
-## Executed Coverage
+### In CI with Newman
 
-| Area | Endpoint / Operation | Status |
-|---|---|---|
-| Catalog | `GET /entries` | Verified |
-| Authentication | `POST /login` | Verified |
-| Cart | `POST /addtocart` | Verified — positive and negative coverage |
-| Cart | `POST /viewcart` | Covered in collection |
-| Cart | `POST /deleteitem` | Covered in collection |
+The workflow [Postman API Collection](../.github/workflows/postman-api-tests.yml) runs the collection with Newman on pushes/pull requests that affect the collection or workflow, and can also be started manually from GitHub Actions.
 
-## Negative Testing
+- [View recent Postman/Newman runs](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml)
+- The workflow output is the source of truth for whether the current collection passed against the live demo API.
+- The external service may be unavailable or change behavior; a failed run must be investigated rather than reported as a successful test.
 
-The `/addtocart` negative suite was used to evaluate invalid and malformed request conditions, including:
+## Collection coverage
 
-- Invalid product IDs
-- Null product IDs
-- Zero product IDs
-- Decimal product IDs
-- Boolean product IDs
-- Extremely large product IDs
-- Missing product ID
-- Missing cookie/token field
-- Invalid authentication token
-- Null request ID
-- Empty request ID
-- Unexpected request fields
-- Malformed JSON
+The collection contains **20 requests** organized into product, authentication, cart, and negative-test folders.
 
-Each case was evaluated from the API's actual response rather than assuming that a negative request must return a specific status code.
+| Area | Checks |
+|---|---|
+| Catalog | HTTP status, non-empty product list, required product fields, positive prices |
+| Product lookup | HTTP status, requested ID match, title and price |
+| Sign up | HTTP status and absence of known signup-error responses |
+| Login | HTTP status and authentication-token format |
+| Add to cart | HTTP status and explicit item-added response |
+| View cart | HTTP status, `Items` array, expected cart item present |
+| Delete cart item | HTTP status, explicit deletion response, follow-up check that item is absent |
+| Negative inputs | Null/empty cart ID, wrong ID type, invalid/missing token, malformed JSON, null/zero/invalid product IDs, unexpected fields, large and decimal IDs, Boolean ID |
 
-## Confirmed API Defect
+## Negative-test interpretation
 
-### EQAP-10 — Null request ID returns HTTP 500
+The collection records the observed response for each input. Some test cases intentionally assert only the observed HTTP status because a status such as `200` does not establish whether the API accepted, ignored, or correctly rejected the invalid input. Those cases are exploratory checks, not proof of correct business behavior and not automatically confirmed defects.
 
-`POST /addtocart` returns HTTP 500 Internal Server Error when the request `id` field is explicitly set to `null` while the authentication token and product ID are valid.
+A test that asserts HTTP 500 for null/empty cart IDs is documenting the observed server error and supports investigation; it does not imply that a server error is acceptable expected product behavior. Confirmed defect reporting is maintained separately in the [EQAP-10 report](../bug-reports/EQAP-10.md) and the associated Jira issue.
 
-The Postman validation for this defect includes assertions confirming:
+## Security and test-data handling
 
-- HTTP 500 response
-- `500 Internal Server Error` response content
+- The committed collection contains no real account credentials or authentication token.
+- Generated credentials and the cart ID are demo-only test data.
+- Do not save real credentials or tokens into a shared/exported collection.
+- The collection targets a public demo service; do not use it against systems without authorization.
 
-The Jira issue contains the reproduction steps, expected/actual behavior, environment information, and two screenshots showing the request and response.
+## Evidence and limits
 
-See [`../bug-reports/EQAP-10.md`](../bug-reports/EQAP-10.md) and [Jira EQAP-10](https://demrkmoore.atlassian.net/browse/EQAP-10).
+- The JSON collection structure is validated as part of repository review.
+- **Latest verified live run (October 15, 2026): 21 HTTP requests executed, 37 assertions, 0 failed assertions.** The 21 requests include 20 saved collection requests plus one follow-up cart-verification request issued by the delete-item test. See the [successful Newman run](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/runs/38799269716). A future run can fail if the external demo service changes or becomes unavailable; always use the current run as the source of truth.
+- The collection does not replace the separate Python/Pytest API suite.
+- API responses from the public service can vary over time; investigate failures and retain the run output rather than silently changing assertions to force a pass.
 
-## Observed Validation Behavior
+## Skills demonstrated
 
-Some invalid requests returned HTTP 200 with an error payload such as:
-
-`{"errorMessage":"Bad parameter, token malformed."}`
-
-These responses are documented as observed API behavior. They are not automatically classified as separate defects when they duplicate an already documented authentication/token-handling behavior.
-
-## Postman Collection
-
-The working collection is stored at:
-
-[`Demoblaze-API-Tests.postman_collection.json`](Demoblaze-API-Tests.postman_collection.json)
-
-The collection contains reusable environment variables such as `baseUrl`, `productId`, `cartId`, and authentication values. Secrets should be supplied through the local Postman environment rather than committed to GitHub.
-
-## Validation Points
-
-For each executed request, record:
-
-1. HTTP method and endpoint.
-2. Request headers and JSON body, excluding secrets.
-3. HTTP status code.
-4. Response body structure.
-5. Required fields and data types.
-6. Business-rule validation.
-7. Response time where useful.
-8. Postman assertion results.
-9. Jira defect reference when behavior violates the expected result.
-
-## Portfolio Value
-
-This API work demonstrates practical QA skills in:
-
-- REST API testing
-- Positive and negative testing
-- Boundary/value-type testing
-- Authentication validation
-- JSON request manipulation
-- Postman scripting
-- Response assertions
-- Defect isolation
-- Jira defect reporting
-- Evidence-driven QA documentation
+REST API testing, positive and negative testing, boundary/value-type testing, authentication and token validation, JSON request construction, Postman JavaScript assertions, test-data setup, reproducible execution, defect isolation, and evidence-based reporting.

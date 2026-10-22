@@ -1,0 +1,22 @@
+from playwright.sync_api import Page
+
+
+class CartPage:
+    def __init__(self, page: Page):
+        self.page = page
+        self.cart_items = "#tbodyid tr"
+
+    def navigate(self):
+        self.page.goto(
+            "https://www.demoblaze.com/cart.html",
+            wait_until="domcontentloaded",
+        )
+
+    def item_count(self):
+        return self.page.locator(self.cart_items).count()
+
+    def get_first_item_price(self):
+        return self.page.locator(f"{self.cart_items} td").nth(2).inner_text()
+
+    def get_total(self):
+        return self.page.locator("#totalp").inner_text()

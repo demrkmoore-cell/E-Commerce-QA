@@ -1,8 +1,8 @@
-from api_client import credentials
+def test_login_wrong_password_returns_error(api_client, test_credentials):
+    username, _ = test_credentials
 
-
-def test_login_wrong_password_returns_error(api_client):
-    username, _ = credentials()
+    signup_response = api_client.signup(username, "CorrectPass_2026_X")
+    assert signup_response.status_code == 200
 
     response = api_client.login(username, "definitely_wrong_password")
 
