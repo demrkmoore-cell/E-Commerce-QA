@@ -1,345 +1,2141 @@
 {
   "info": {
+    "_postman_id": "d9efe97b-5765-43a7-a874-a0e60848a4b4",
     "name": "Demoblaze API Tests",
-    "_postman_id": "ecommerce-qa-demoblaze-api",
-    "description": "API test collection for the E-Commerce QA Portfolio. Includes product, authentication, cart, order, and negative API validation coverage.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "description": "API test collection for the Demoblaze public e-commerce application.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54602318",
+    "_collection_link": "https://go.postman.co/collection/54602318-d9efe97b-5765-43a7-a874-a0e60848a4b4?source=collection_link"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "https://api.demoblaze.com" },
-    { "key": "username", "value": "" },
-    { "key": "password", "value": "" },
-    { "key": "productId", "value": "1" },
-    { "key": "cartId", "value": "" },
-    { "key": "authToken", "value": "" },
-    { "key": "timestamp", "value": "" }
-  ],
   "item": [
     {
-      "name": "01 - Products",
+      "name": "Authentication",
       "item": [
         {
-          "name": "API-001 - Get Product Catalog",
-          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/entries", "host": ["{{baseUrl}}"], "path": ["entries"] } }
-        },
-        {
-          "name": "API-002 - Get Product By ID",
+          "name": "Login - Valid Credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\nconst responseText = pm.response.text().trim();\nconst match = responseText.match(/Auth_token:\\s*([^\\s\"']+)/);\n\npm.test(\"Response contains authentication token\", function () {\n    pm.expect(match, \"Expected an Auth_token response\").to.not.be.null;\n});\n\nif (match) {\n    const token = match[1].replace(/^[\"']+|[\"']+$/g, \"\");\n\n    pm.collectionVariables.set(\"authToken\", token);\n}\n\nconst savedToken = pm.collectionVariables.get(\"authToken\");\n\npm.test(\"Authentication token was saved correctly\", function () {\n    pm.expect(savedToken).to.be.a(\"string\").and.not.empty;\n    pm.expect(savedToken).not.to.include('\"');\n    pm.expect(savedToken).not.to.include(\"'\");\n});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{productId}}\"\n}" },
-            "url": { "raw": "{{baseUrl}}/view", "host": ["{{baseUrl}}"], "path": ["view"] }
-          }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Invalid Credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Invalid credentials return an error message\", function () {\n    const body = pm.response.json();\n\n    pm.expect(body).to.have.property(\"errorMessage\");\n    pm.expect(body.errorMessage).to.be.a(\"string\").and.not.empty;\n});\n\npm.test(\"Error message identifies the login failure\", function () {\n    const body = pm.response.json();\n\n    pm.expect(body.errorMessage).to.include(\"Wrong password\");\n});\n\npm.test(\"Response completes within 5 seconds\", function () {\n    pm.expect(pm.response.responseTime).to.be.below(5000);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"invalid_user\",\n  \"password\": \"wrong_password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Test User",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
         }
       ]
     },
     {
-      "name": "02 - Authentication",
+      "name": "Products",
       "item": [
         {
-          "name": "API-003 - Login",
+          "name": "Get All Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains products\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.Items).to.be.an(\"array\");",
+                  "    pm.expect(body.Items.length).to.be.greaterThan(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}" },
-            "url": { "raw": "{{baseUrl}}/login", "host": ["{{baseUrl}}"], "path": ["login"] }
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/entries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "entries"
+              ]
+            }
           },
-          "event": [{
-            "listen": "test",
-            "script": { "exec": [
-              "pm.test(\"Login request returns HTTP 200\", function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "",
-              "const token = pm.response.text().replace(\"Auth_token:\", \"\").trim();",
-              "if (token) {",
-              "    pm.environment.set(\"authToken\", token);",
-              "}",
-              "console.log(\"Authentication token extracted and stored in authToken when present.\");"
-            ], "type": "text/javascript" }
-          }]
+          "response": []
         },
         {
-          "name": "API-004 - Sign Up",
+          "name": "Verify Product Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product contains expected fields\", function () {",
+                  "    const body = pm.response.json();",
+                  "    const product = body.Items[0];",
+                  "    pm.expect(product).to.have.property(\"id\");",
+                  "    pm.expect(product).to.have.property(\"title\");",
+                  "    pm.expect(product).to.have.property(\"price\");",
+                  "    pm.expect(product).to.have.property(\"cat\");",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}" },
-            "url": { "raw": "{{baseUrl}}/signup", "host": ["{{baseUrl}}"], "path": ["signup"] }
-          }
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/entries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "entries"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
-      "name": "03 - Cart",
+      "name": "Cart",
       "item": [
         {
-          "name": "API-005 - Add Product To Cart",
+          "name": "Add Product to Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cart request returns a response\", function () {\n    pm.expect(pm.response.code).to.be.a(\"number\");\n});\n\npm.test(\"Response time is under 5 seconds\", function () {\n    pm.expect(pm.response.responseTime).to.be.below(5000);\n});\n\npm.test(\"Successful cart response is valid JSON\", function () {\n    if (pm.response.code === 200) {\n        pm.expect(\n            () => pm.response.json(),\n            \"Expected valid JSON for a successful cart response\"\n        ).to.not.throw();\n    }\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const token = String(\n    pm.collectionVariables.get(\"authToken\") || \"\"\n).trim().replace(/^[\"']+|[\"']+$/g, \"\");\n\nconst productId = Number(\n    pm.variables.replaceIn(\"{{productId}}\")\n);\nconst cartId = pm.variables.replaceIn(\"{{$guid}}\");\n\nif (!token) {\n    throw new Error(\"Missing authToken. Run Login first.\");\n}\n\nif (!Number.isInteger(productId) || productId <= 0) {\n    throw new Error(\"productId must resolve to a positive integer.\");\n}\n\nconst payload = {\n    id: cartId,\n    cookie: token,\n    prod_id: productId,\n    flag: true\n};\n\n// Replace the raw request body with properly serialized JSON.\npm.request.body.update({\n    mode: \"raw\",\n    raw: JSON.stringify(payload)\n});\n\nconsole.log(\"=== Cart Request Validation ===\");\nconsole.log(\"Cart ID present:\", Boolean(cartId));\nconsole.log(\"Product ID:\", productId);\nconsole.log(\"Token present:\", Boolean(token));\nconsole.log(\"Payload is valid JSON:\", (() => {\n    try {\n        JSON.parse(JSON.stringify(payload));\n        return true;\n    } catch (error) {\n        return false;\n    }\n})());\nconsole.log(\"=== End Validation ===\");"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}"], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Add to cart request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "API-006 - View Cart",
+          "name": "NEG – Add to Cart – Missing Cookie",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\"\n}" },
-            "url": { "raw": "{{baseUrl}}/viewcart", "host": ["{{baseUrl}}"], "path": ["viewcart"] }
-          }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
         },
         {
-          "name": "API-007 - Delete Cart Item",
+          "name": "NEG – Add to Cart – Boolean Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Boolean product ID response is empty\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\nconsole.log(\n    \"Observed response for Boolean product ID. \" +\n    \"HTTP 200 and an empty body do not establish whether the API handled it correctly.\"\n);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}}\n}" },
-            "url": { "raw": "{{baseUrl}}/deleteitem", "host": ["{{baseUrl}}], "path": ["deleteitem"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "04 - Orders",
-      "item": [
-        {
-          "name": "API-008 - Place Order",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"DeMarko QA\",\n  \"country\": \"United States\",\n  \"city\": \"Des Moines\",\n  \"card\": \"1111\",\n  \"month\": \"12\",\n  \"year\": \"2026\"\n}" },
-            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}], "path": ["orders"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "05 - Negative Tests",
-      "item": [
-        {
-          "name": "NEG - Add to Cart - Null ID",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": null,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Null ID request returns HTTP 500\", function () {",
-            "    pm.response.to.have.status(500);",
-            "});",
-            "pm.test(\"API returns Internal Server Error\", function () {",
-            "    pm.expect(pm.response.text()).to.include(\"500 Internal Server Error\");",
-            "});",
-            "console.log(\"Potential defect: API returned HTTP 500 when the request ID was null.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Empty ID",
+          "name": "NEG – Add to Cart – Empty ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted Boolean product ID 'true' and processed the request successfully.\"",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Empty ID request returns HTTP 500\", function () {",
-            "    pm.response.to.have.status(500);",
-            "});",
-            "pm.test(\"API returns Internal Server Error\", function () {",
-            "    pm.expect(pm.response.text()).to.include(\"500 Internal Server Error\");",
-            "});",
-            "console.log(\"Potential defect: API returned HTTP 500 when the request ID was empty.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Invalid ID Type",
+          "name": "NEG – Add to Cart – Invalid ID Type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted Boolean product ID 'true' and processed the request successfully.\"",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": 12345,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Invalid ID type request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "console.log(\"Observed behavior: API accepted a numeric request ID and returned HTTP 200.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Invalid Auth Token",
+          "name": "NEG – Add to Cart – Invalid Request ID Type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted Boolean product ID 'true' and processed the request successfully.\"",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"INVALID_TOKEN\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Invalid auth token request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "pm.test(\"API returns token validation error\", function () {",
-            "    const response = pm.response.json();",
-            "    pm.expect(response.errorMessage).to.equal(\"Bad parameter, token malformed.\");",
-            "});"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Missing Cookie",
+          "name": "NEG – Add to Cart – Missing Request ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted Boolean product ID 'true' and processed the request successfully.\"",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Missing cookie request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "pm.test(\"API returns token validation error\", function () {",
-            "    const response = pm.response.json();",
-            "    pm.expect(response.errorMessage).to.equal(\"Bad parameter, token malformed.\");",
-            "});"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Malformed JSON",
+          "name": "NEG – Add to Cart – Boolean Request ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted Boolean product ID 'true' and processed the request successfully.\"",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{ \"id\": \"{{cartId}}\", \"cookie\": \"{{authToken}}\", \"prod_id\": {{productId}}, " },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Malformed JSON request returns HTTP 400\", function () {",
-            "    pm.response.to.have.status(400);",
-            "});",
-            "pm.test(\"API rejects malformed JSON\", function () {",
-            "    pm.expect(pm.response.text()).to.include(\"400 Bad Request\");",
-            "});",
-            "console.log(\"Expected result: API rejected malformed JSON with HTTP 400.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Null Product ID",
+          "name": "NEG – Add to Cart – Null ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted Boolean product ID 'true' and processed the request successfully.\"",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Null product ID request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "pm.test(\"API returns an empty response for null product ID\", function () {",
-            "    pm.expect(pm.response.text()).to.be.empty;",
-            "});",
-            "console.log(\"Potential defect: API returned HTTP 200 with an empty response for null product ID.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Zero Product ID",
+          "name": "NEG – Add to Cart – Missing ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted Boolean product ID 'true' and processed the request successfully.\"",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Zero product ID request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "pm.test(\"API returns an empty response for zero product ID\", function () {",
-            "    pm.expect(pm.response.text()).to.be.empty;",
-            "});"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Unexpected Field",
+          "name": "NEG – Add to Cart – Invalid Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted Boolean product ID 'true' and processed the request successfully.\"",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true,\n  \"unexpected_field\": \"INVALID\"\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Unexpected field request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "console.log(\"Potential defect: API accepted unexpected request field 'unexpected_field' and processed the request successfully.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Extremely Large Product ID",
+          "name": "NEG – Add to Cart – Decimal Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Decimal product ID request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Decimal product ID response is empty\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\nconsole.log(\n    \"Observed response for decimal product ID. \" +\n    \"HTTP 200 and an empty body do not establish whether the API handled it correctly.\"\n);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999999999999999,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 1.5,\n  \"flag\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Extremely large product ID request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "console.log(\"Potential defect: API accepted extremely large product ID and processed the request successfully.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Decimal Product ID",
+          "name": "NEG – Add to Cart – Extremely Large Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Extremely large product ID request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Extremely large product ID response is empty\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\nconsole.log(\n    \"Observed response for extremely large product ID. \" +\n    \"HTTP 200 and an empty body do not establish whether the API handled it correctly.\"\n);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 1.5,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999999999999999,\n  \"flag\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Decimal product ID request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "console.log(\"Potential defect: API accepted decimal product ID 1.5 and processed the request successfully.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
         },
         {
-          "name": "NEG - Add to Cart - Boolean Product ID",
+          "name": "NEG – Add to Cart – Unexpected Request Field",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Unexpected field request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Unexpected field request returns an empty response\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\nconsole.log(\n    \"Observed HTTP 200 with an empty response when an unexpected field was included. \" +\n    \"This does not establish whether the API handled the extra field correctly.\"\n);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": true,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true,\n  \"unexpected_field\": \"INVALID\"\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Boolean product ID request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "console.log(\"Potential defect: API accepted Boolean product ID true and processed the request successfully.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Malformed JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – [Condition]",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Zero Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Zero product ID request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"API returns an empty response for zero product ID\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\nconsole.log(\n    \"Observed HTTP 200 with an empty response for zero product ID. \" +\n    \"Further investigation is needed to determine whether this is expected API behavior.\"\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Null Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Null product ID request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"API returns an empty response for null product ID\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\nconsole.log(\n    \"Observed HTTP 200 with an empty response for null product ID. \" +\n    \"Further investigation is needed to determine whether this is expected API behavior.\"\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Missing Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Missing Request Body",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Malformed JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG-Add to Cart-Empty Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG-Add to Cart-Product ID -1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG - Add to Cart - Product ID Zero",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Zero product ID request was processed\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "console.log(",
+                  "    \"Potential defect: API accepted product ID 0. Response:\",",
+                  "    pm.response.text()",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 0,\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG - Add to Cart - Product ID Null",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Product to Cart Copy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG - Add to Cart - Invalid Product ID Type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Numeric ID request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Numeric ID request returns an empty response\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\nconsole.log(\n    \"Observed HTTP 200 with an empty response for a numeric ID. \" +\n    \"This does not establish whether the API handled the invalid ID correctly.\"\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 12345,\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Non-Numeric Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG - Add to Cart - Missing Flag",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG - Add to Cart - Missing ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Invalid Flag Type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Null Flag",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG - Add to Cart - Invalid Cart Item ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG - Add to Cart - Missing  Authentication Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG – Add to Cart – Invalid Authentication Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NEG - Add to Cart - Missing Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Add to Cart returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Product was added to cart\", function () {",
+                  "    pm.expect(pm.response.json()).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "NEG - Add to Cart - Invalid Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Invalid product ID request returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Invalid product ID response is empty\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\npm.test(\"Response time is under 5 seconds\", function () {\n    pm.expect(pm.response.responseTime).to.be.below(5000);\n});\n\nconsole.log(\n    \"Observed HTTP 200 with an empty response for product ID 999999. \" +\n    \"The API did not reject this request through an HTTP error status. \" +\n    \"Further investigation is needed to determine whether this behavior is expected.\"\n);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}" },
-            "url": { "raw": "{{baseUrl}}/addtocart", "host": ["{{baseUrl}}], "path": ["addtocart"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addtocart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addtocart"
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test(\"Invalid product ID request returns HTTP 200\", function () {",
-            "    pm.response.to.have.status(200);",
-            "});",
-            "console.log(\"Potential defect: API accepted invalid product ID 999999.\");"
-          ], "type": "text/javascript" } }]
+          "response": []
+        },
+        {
+          "name": "View Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Cart contains Items array\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.Items).to.be.an(\"array\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\":\"{{cartId}}\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/viewcart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "viewcart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SMOKE – Verify Cart Empty After Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Cart contains Items array\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.Items).to.be.an(\"array\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\":\"{{cartId}}\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/viewcart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "viewcart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product from Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\":\"{{cartId}}\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/deleteitem",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deleteitem"
+              ]
+            }
+          },
+          "response": []
         }
       ]
+    },
+    {
+      "name": "Add to Cart - Invalid Product ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Invalid product ID is rejected with a client error\", function () {\n    pm.expect(\n        pm.response.code,\n        \"Expected HTTP 400-499, but received HTTP \" + pm.response.code\n    ).to.be.within(400, 499);\n});\n\npm.test(\"Request completes within 5 seconds\", function () {\n    pm.expect(pm.response.responseTime).to.be.below(5000);\n});\n\npm.test(\"Response body is not empty\", function () {\n    pm.expect(pm.response.text()).to.not.be.empty;\n});\n\nconsole.log(\"Request URL:\", pm.request.url.toString());\nconsole.log(\"Request method:\", pm.request.method);\nconsole.log(\"HTTP Status:\", pm.response.code);\nconsole.log(\"Response Body:\", pm.response.text());\nconsole.log(\"Response Time (ms):\", pm.response.responseTime);\nconsole.log(\"Product ID under test: 999999\");\nconsole.log(\"timestamp variable is set:\", Boolean(pm.variables.get(\"timestamp\")));\nconsole.log(\"authToken variable is set:\", Boolean(pm.variables.get(\"authToken\")));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": 999999,\n  \"flag\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://api.demoblaze.com/addtocart",
+          "protocol": "https",
+          "host": [
+            "api",
+            "demoblaze",
+            "com"
+          ],
+          "path": [
+            "addtocart"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add to Cart - Missing Authentication",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Add to Cart returns 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Missing authentication returns token error\", function () {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.errorMessage).to.equal(\"Bad parameter, token malformed.\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"prod_id\": 1,\n  \"flag\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://api.demoblaze.com/addtocart",
+          "protocol": "https",
+          "host": [
+            "api",
+            "demoblaze",
+            "com"
+          ],
+          "path": [
+            "addtocart"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add to Cart - Null Product ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Add to Cart returns 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Request completes within 5 seconds\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"58d45c9d-ab6d-6e07-f2a7-993a6c7686e6-{{timestamp}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": null,\n  \"flag\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://api.demoblaze.com/addtocart",
+          "protocol": "https",
+          "host": [
+            "api",
+            "demoblaze",
+            "com"
+          ],
+          "path": [
+            "addtocart"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.demoblaze.com"
+    },
+    {
+      "key": "username",
+      "value": "qa_portfolio_user"
+    },
+    {
+      "key": "password",
+      "value": "Password123!"
+    },
+    {
+      "key": "cartId",
+      "value": "qa_portfolio_user"
+    },
+    {
+      "key": "productId",
+      "value": "1"
+    },
+    {
+      "key": "authToken",
+      "value": ""
     }
   ]
 }
