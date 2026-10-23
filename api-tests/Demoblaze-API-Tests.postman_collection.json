@@ -286,24 +286,16 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "function setRuntimeVariable(name, value) {",
-                  "    const environmentName = pm.environment && pm.environment.name;",
-                  "    if (environmentName && environmentName !== \"No Environment\") pm.environment.set(name, value);",
-                  "    else pm.collectionVariables.set(name, value);",
-                  "}",
-                  "",
                   "const token = String(pm.variables.get(\"authToken\") || \"\").trim().replace(/^[\"']+|[\"']+$/g, \"\");",
+                  "const cartId = String(pm.variables.get(\"cartId\") || \"\").trim();",
                   "const productId = Number(pm.variables.replaceIn(\"{{productId}}\"));",
-                  "const cartItemId = pm.variables.replaceIn(\"{{$guid}}\");",
-                  "setRuntimeVariable(\"cartItemId\", cartItemId);",
                   "",
                   "if (!token) throw new Error(\"Missing authToken. Run Login first.\");",
+                  "if (!cartId) throw new Error(\"Missing cartId.\");",
                   "if (!Number.isInteger(productId) || productId <= 0) throw new Error(\"productId must resolve to a positive integer.\");",
                   "",
-                  "const payload = { id: cartItemId, cookie: token, prod_id: productId, flag: true };",
-                  "pm.request.body.update({ mode: \"raw\", raw: JSON.stringify(payload) });",
-                  "console.log(\"Cart item ID:\", cartItemId);",
-                  "console.log(\"Cart ID:\", pm.variables.get(\"cartId\"));",
+                  "pm.request.body.update({ mode: \"raw\", raw: JSON.stringify({ id: cartId, cookie: token, prod_id: productId, flag: true }) });",
+                  "console.log(\"Cart ID:\", cartId);",
                   "console.log(\"Product ID:\", productId);",
                   "console.log(\"Authentication token present:\", Boolean(token));"
                 ]
@@ -320,7 +312,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{cartItemId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}",
+              "raw": "{\n  \"id\": \"{{cartId}}\",\n  \"cookie\": \"{{authToken}}\",\n  \"prod_id\": {{productId}},\n  \"flag\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -359,11 +351,18 @@
                   "    pm.expect(cartResponse.Items).to.be.an(\"array\");",
                   "});",
                   "",
-                  "pm.test(\"View Cart contains the item added by this run\", function () {",
-                  "    const expectedItemId = String(pm.variables.get(\"cartItemId\") || \"\");",
-                  "    pm.expect(expectedItemId, \"cartItemId should be saved by the add request\").to.not.be.empty;",
-                  "    pm.expect(cartResponse.Items.some(function (item) { return String(item.id) === expectedItemId; }),",
-                  "        \"Expected the cart to contain the item added by this run\").to.be.true;",
+                  "pm.test(\"View Cart contains the product added by this run\", function () {",
+                  "    const expectedProductId = Number(pm.variables.get(\"productId\"));",
+                  "    const matchingItem = cartResponse.Items.find(function (item) {",
+                  "        return Number(item.prod_id) === expectedProductId;",
+                  "    });",
+                  "    pm.expect(matchingItem, \"Expected the cart to contain the product added by this run\").to.be.an(\"object\");",
+                  "    pm.expect(matchingItem).to.have.property(\"id\");",
+                  "    const itemId = String(matchingItem.id);",
+                  "    const environmentName = pm.environment && pm.environment.name;",
+                  "    if (environmentName && environmentName !== \"No Environment\") pm.environment.set(\"cartItemId\", itemId);",
+                  "    else pm.collectionVariables.set(\"cartItemId\", itemId);",
+                  "    console.log(\"Cart item ID captured for deletion:\", Boolean(itemId));",
                   "});",
                   "",
                   "pm.test(\"Response time is under 5 seconds\", function () {",
@@ -421,6 +420,18 @@
                   "pm.test(\"Response time is under 5 seconds\", function () {",
                   "    pm.expect(pm.response.responseTime).to.be.below(5000);",
                   "});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const itemId = String(pm.variables.get(\"cartItemId\") || \"\").trim();",
+                  "if (!itemId) throw new Error(\"Missing cartItemId. Run View Cart first to capture the created item ID.\");",
+                  "pm.request.body.update({ mode: \"raw\", raw: JSON.stringify({ id: itemId }) });",
+                  "console.log(\"Deleting cart item ID:\", itemId);"
                 ]
               }
             }
