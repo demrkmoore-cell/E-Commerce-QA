@@ -2558,11 +2558,11 @@
     },
     {
       "key": "username",
-      "value": "qa_portfolio_user"
+      "value": ""
     },
     {
       "key": "password",
-      "value": "Password123!"
+      "value": ""
     },
     {
       "key": "cartId",
