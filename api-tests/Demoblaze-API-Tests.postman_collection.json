@@ -2623,7 +2623,8 @@
           "",
           "const currentCartId = String(pm.variables.get(\"cartId\") || \"\").trim();",
           "if (!currentCartId) {",
-          "    setRuntimeVariable(\"cartId\", pm.variables.replaceIn(\"{{$guid}}\"));",
+          "    // Demoblaze associates the cart with the authenticated demo username.",
+          "    setRuntimeVariable(\"cartId\", String(pm.variables.get(\"testUsername\") || \"\").trim());",
           "}"
         ]
       }
