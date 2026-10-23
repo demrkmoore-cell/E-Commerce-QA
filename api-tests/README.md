@@ -25,7 +25,7 @@ The workflow [Postman API Collection](../.github/workflows/postman-api-tests.yml
 
 ## Collection coverage
 
-The collection contains **20 requests** organized into product, authentication, cart, and negative-test folders.
+The collection contains **48 requests**: 3 authentication requests, 2 catalog requests, 39 cart/negative-input requests, and 4 standalone regression requests at the collection root. The exact count is checked against the committed JSON during repository review.
 
 | Area | Checks |
 |---|---|
@@ -54,7 +54,7 @@ A test that asserts HTTP 500 for null/empty cart IDs is documenting the observed
 ## Evidence and limits
 
 - The JSON collection structure is validated as part of repository review.
-- **Latest verified live run (October 15, 2026): 21 HTTP requests executed, 37 assertions, 0 failed assertions.** The 21 requests include 20 saved collection requests plus one follow-up cart-verification request issued by the delete-item test. See the [successful Newman run](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/runs/38799269716). A future run can fail if the external demo service changes or becomes unavailable; always use the current run as the source of truth.
+- **Historical successful Newman run (October 15, 2026): 21 HTTP requests executed, 37 assertions, 0 failed assertions.** That run used an earlier collection version and is retained as historical evidence, not as proof that the current 48-request collection passes. The October 23 CI audit found authentication/setup and cart-flow mismatches; fixes were pushed and the current result is available in the [Postman/Newman workflow](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml). Always use the latest run as the source of truth.
 - The collection does not replace the separate Python/Pytest API suite.
 - API responses from the public service can vary over time; investigate failures and retain the run output rather than silently changing assertions to force a pass.
 
