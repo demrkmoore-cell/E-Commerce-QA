@@ -11,7 +11,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | Test planning | QA test plan and functional test inventory | ✅ Complete |
 | Manual testing | 106 recorded executions | ✅ Complete |
 | Defect documentation | Confirmed defects EQAP-3–EQAP-8 and EQAP-10; EQAP-9 investigation | ✅ Complete |
-| API testing | Postman collection with scripted assertions and a live Newman CI run | **37 assertions passed** in the October 15, 2026 run; [view result](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/runs/38799269716) |
+| API testing | 48-request Postman collection with scripted assertions | Desktop collection run reported passing by the project owner; current Newman result is tracked in [GitHub Actions](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml) |
 | API automation | 7-test Python/Pytest suite | ✅ Complete |
 | CI | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
@@ -76,7 +76,7 @@ API coverage is split between the Python/Pytest suite and a Postman collection. 
 
 ### Postman
 
-The collection is stored at [`api-tests/Demoblaze-API-Tests.postman_collection.json`](api-tests/Demoblaze-API-Tests.postman_collection.json). It generates local demo credentials and a cart ID at runtime, so the collection can be run without committing credentials. Run details are in [`api-tests/README.md`](api-tests/README.md).
+The 48-request collection is stored at [`api-tests/Demoblaze-API-Tests.postman_collection.json`](api-tests/Demoblaze-API-Tests.postman_collection.json). It generates demo credentials and a cart ID at runtime, so the collection can be run without committing credentials. The latest Newman result is linked from the [Postman workflow](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml); see [`api-tests/README.md`](api-tests/README.md) for scope and historical evidence.
 
 Techniques demonstrated include positive/negative testing, boundary and invalid-input testing, authentication/token validation, HTTP status assertions, response-body assertions, Postman test scripting, and reproducible defect evidence.
 
