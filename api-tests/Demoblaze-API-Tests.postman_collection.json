@@ -12,6 +12,81 @@
       "name": "Authentication",
       "item": [
         {
+          "name": "Create Test User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const signupResponseText = pm.response.text();",
+                  "let signupBody;",
+                  "let signupJsonParsed = false;",
+                  "",
+                  "try {",
+                  "    signupBody = JSON.parse(signupResponseText);",
+                  "    signupJsonParsed = true;",
+                  "} catch (e) {",
+                  "    signupBody = undefined;",
+                  "}",
+                  "",
+                  "pm.test(\"Signup returns HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Signup response is valid JSON\", function () {",
+                  "    pm.expect(signupResponseText).to.not.be.empty;",
+                  "    pm.expect(signupJsonParsed, \"Expected signup response to be valid JSON\").to.be.true;",
+                  "});",
+                  "",
+                  "pm.test(\"Signup outcome is identified\", function () {",
+                  "    const isCreated = signupJsonParsed && signupBody === \"\";",
+                  "    const isDuplicate = signupJsonParsed && signupBody !== null && typeof signupBody === \"object\" &&",
+                  "        signupBody.errorMessage === \"This user already exist.\";",
+                  "    pm.expect(",
+                  "        isCreated || isDuplicate,",
+                  "        \"Expected an empty-string success response or the known duplicate-user response\"",
+                  "    ).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is under 5 seconds\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "",
+                  "console.log(\"Signup outcome:\",",
+                  "    signupJsonParsed && signupBody === \"\"",
+                  "        ? \"Successful creation response\"",
+                  "        : (signupBody && signupBody.errorMessage) || \"Unexpected response\"",
+                  ");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{testUsername}}\",\n    \"password\": \"{{testPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Login - Valid Credentials",
           "event": [
             {
@@ -90,43 +165,6 @@
               ],
               "path": [
                 "login"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create Test User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const responseText = pm.response.text();\nlet responseBody = {};\n\ntry {\n    responseBody = JSON.parse(responseText);\n} catch (e) {\n    responseBody = {};\n}\n\npm.test(\"Signup returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Signup response is valid JSON\", function () {\n    pm.expect(responseText).to.not.be.empty;\n    pm.expect(responseBody).to.be.an(\"object\");\n});\n\npm.test(\"Signup outcome is identified\", function () {\n    const isCreated = responseText.trim() === '\"\"';\n    const isDuplicate =\n        responseBody.errorMessage === \"This user already exist.\";\n\n    pm.expect(\n        isCreated || isDuplicate,\n        \"Expected an empty-string success response or the known duplicate-user response\"\n    ).to.be.true;\n});\n\npm.test(\"Response time is under 5 seconds\", function () {\n    pm.expect(pm.response.responseTime).to.be.below(5000);\n});\n\nconsole.log(\"Signup outcome:\",\n    responseText.trim() === '\"\"'\n        ? \"Possible successful creation; verify independently\"\n        : responseBody.errorMessage || \"Unexpected response\"\n);"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"username\": \"{{testUsername}}\",\n    \"password\": \"{{testPassword}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/signup",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "signup"
               ]
             }
           },
@@ -2093,6 +2131,41 @@
       "key": "testPassword",
       "value": "",
       "type": "default"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "function setRuntimeVariable(name, value) {",
+          "    const environmentName = pm.environment && pm.environment.name;",
+          "    if (environmentName && environmentName !== \"No Environment\") {",
+          "        pm.environment.set(name, value);",
+          "    } else {",
+          "        pm.collectionVariables.set(name, value);",
+          "    }",
+          "}",
+          "",
+          "const currentUsername = String(pm.variables.get(\"testUsername\") || \"\").trim();",
+          "if (!currentUsername) {",
+          "    const suffix = pm.variables.replaceIn(\"{{$guid}}\").replace(/-/g, \"\").slice(0, 16);",
+          "    setRuntimeVariable(\"testUsername\", `qa_portfolio_${suffix}`);",
+          "}",
+          "",
+          "const currentPassword = String(pm.variables.get(\"testPassword\") || \"\").trim();",
+          "if (!currentPassword) {",
+          "    const suffix = pm.variables.replaceIn(\"{{$guid}}\").replace(/-/g, \"\").slice(0, 16);",
+          "    setRuntimeVariable(\"testPassword\", `QaTest_${suffix}_9!`);",
+          "}",
+          "",
+          "const currentCartId = String(pm.variables.get(\"cartId\") || \"\").trim();",
+          "if (!currentCartId) {",
+          "    setRuntimeVariable(\"cartId\", pm.variables.replaceIn(\"{{$guid}}\"));",
+          "}"
+        ]
+      }
     }
   ]
 }
