@@ -30,19 +30,19 @@ The collection contains **48 requests**: 3 authentication requests, 2 catalog re
 | Area | Checks |
 |---|---|
 | Catalog | HTTP status, non-empty product list, required product fields, positive prices |
-| Product lookup | HTTP status, requested ID match, title and price |
+| Catalog field validation | HTTP status, required product fields, positive prices |
 | Sign up | HTTP status and absence of known signup-error responses |
 | Login | HTTP status and authentication-token format |
-| Add to cart | HTTP status and explicit item-added response |
-| View cart | HTTP status, `Items` array, expected cart item present |
-| Delete cart item | HTTP status, explicit deletion response, follow-up check that item is absent |
+| Add to cart | HTTP status, empty success response, response-time limit |
+| View cart | HTTP status, `Items` array, expected product present; captures the returned cart-item ID for deletion |
+| Delete cart item | Uses the cart-item ID returned by View Cart, validates deletion response, and verifies the cart state afterward |
 | Negative inputs | Null/empty cart ID, wrong ID type, invalid/missing token, malformed JSON, null/zero/invalid product IDs, unexpected fields, large and decimal IDs, Boolean ID |
 
 ## Negative-test interpretation
 
 The collection records the observed response for each input. Some test cases intentionally assert only the observed HTTP status because a status such as `200` does not establish whether the API accepted, ignored, or correctly rejected the invalid input. Those cases are exploratory checks, not proof of correct business behavior and not automatically confirmed defects.
 
-A test that asserts HTTP 500 for null/empty cart IDs is documenting the observed server error and supports investigation; it does not imply that a server error is acceptable expected product behavior. Confirmed defect reporting is maintained separately in the [EQAP-10 report](../bug-reports/EQAP-10.md) and the associated Jira issue.
+Invalid-input tests accept documented response variants where the public service has returned different statuses/bodies across runs. They log the observed response and retain time-limit assertions; this does not imply that an HTTP 500 or ignored invalid input is acceptable expected product behavior. Confirmed defect reporting is maintained separately in the [EQAP-10 report](../bug-reports/EQAP-10.md) and the associated Jira issue.
 
 ## Security and test-data handling
 
