@@ -53,10 +53,13 @@ Invalid-input tests accept documented response variants where the public service
 
 ## Evidence and limits
 
-- The JSON collection structure is validated as part of repository review.
-- **Historical successful Newman run (October 15, 2026): 21 HTTP requests executed, 37 assertions, 0 failed assertions.** That run used an earlier collection version and is retained as historical evidence, not as proof that the current 48-request collection passes. On October 23, the latest audited Newman run executed all 48 requests and 144 assertions, with **1 failed assertion**: after Add to Cart returned HTTP 200 with an empty body, the subsequent View Cart response did not contain the newly added item. The other 143 assertions passed. The failure is retained as a real reproducibility finding against the public demo API rather than hidden by weakening the item-persistence assertion. See [that run](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/runs/40011899249) and the [Postman/Newman workflow](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml). The project owner separately reported that all 48 requests passed in Postman Desktop; the difference between local and CI results remains an open audit finding.
+- The committed JSON collection is validated during repository review.
+- **Latest successful Newman run (October 24, 2026, commit `d52f48c`): 48 HTTP requests, 144 assertions, 0 failures.** The [Postman/Newman GitHub Actions run](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/runs/40112769159) passed against the public Demoblaze API. The same collection version also passed a local Newman run. The cart lifecycle was verified by adding an item, confirming it appeared in View Cart, deleting it, and confirming it was absent afterward.
+- Earlier CI runs on previous commits failed when the added cart item did not appear in View Cart. Those failures were investigated; the cart owner ID and item lifecycle assertions were corrected, and the successful run above verifies the updated commit. The earlier [October 23 failed run](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/runs/40011899249) remains available as historical evidence and is not the current result.
+- The October 15, 2026 run (21 requests, 37 assertions, 0 failures) used an earlier collection version and is retained as historical evidence only.
+- A passing test suite confirms that its assertions passed against the observed API responses; it does not prove the public API is defect-free. Several invalid-input tests record observed response behavior, and some cases return HTTP 200 or HTTP 500 for invalid inputs. These observations should not be interpreted as proof that the API handled those inputs correctly.
 - The collection does not replace the separate Python/Pytest API suite.
-- API responses from the public service can vary over time; investigate failures and retain the run output rather than silently changing assertions to force a pass.
+- The public demo service can change or become unavailable; investigate future failures and retain run output rather than weakening assertions just to force a pass.
 
 ## Skills demonstrated
 
