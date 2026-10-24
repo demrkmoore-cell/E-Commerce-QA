@@ -299,7 +299,6 @@
                   "if (!Number.isInteger(productId) || productId <= 0) throw new Error(\"productId must resolve to a positive integer.\");",
                   "const itemId = pm.variables.replaceIn(\"{{$guid}}\");",
                   "saveRuntimeVariable(\"cartItemId\", itemId);",
-                  "pm.request.body.update({ mode: \"raw\", raw: JSON.stringify({ id: itemId, cookie: token, prod_id: productId, flag: true }) });",
                   "console.log(\"Cart owner ID for View Cart:\", cartId);",
                   "console.log(\"New cart item ID:\", itemId);",
                   "console.log(\"Product ID:\", productId);",
