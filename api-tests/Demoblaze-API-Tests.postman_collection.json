@@ -297,8 +297,11 @@
                   "if (!token) throw new Error(\"Missing authToken. Run Login first.\");",
                   "if (!cartId) throw new Error(\"Missing cartId. Run the collection setup first.\");",
                   "if (!Number.isInteger(productId) || productId <= 0) throw new Error(\"productId must resolve to a positive integer.\");",
-                  "pm.request.body.update({ mode: \"raw\", raw: JSON.stringify({ id: cartId, cookie: token, prod_id: productId, flag: true }) });",
-                  "console.log(\"Cart owner ID:\", cartId);",
+                  "const itemId = pm.variables.replaceIn(\"{{$guid}}\");",
+                  "saveRuntimeVariable(\"cartItemId\", itemId);",
+                  "pm.request.body.update({ mode: \"raw\", raw: JSON.stringify({ id: itemId, cookie: token, prod_id: productId, flag: true }) });",
+                  "console.log(\"Cart owner ID for View Cart:\", cartId);",
+                  "console.log(\"New cart item ID:\", itemId);",
                   "console.log(\"Product ID:\", productId);",
                   "console.log(\"Authentication token present:\", Boolean(token));"
                 ]
