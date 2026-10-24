@@ -1307,7 +1307,7 @@
           "response": []
         },
         {
-          "name": "NEG – Add to Cart – [Condition]",
+          "name": "Add to Cart – Valid Payload Response Check",
           "event": [
             {
               "listen": "test",
@@ -1817,7 +1817,7 @@
           "response": []
         },
         {
-          "name": "Add Product to Cart Copy",
+          "name": "Add to Cart – Standalone Empty-Body Check",
           "event": [
             {
               "listen": "test",
