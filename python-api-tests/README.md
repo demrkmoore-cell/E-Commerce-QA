@@ -114,4 +114,4 @@ No GitHub Secrets are required for Demoblaze account credentials because the tes
 - Test execution results
 - QA test plan
 - Regression strategy
-- SQL/backend validation planning
+- SQL/backend validation is documented separately as a planned approach; this Python/Pytest suite does not execute SQL/backend tests.
