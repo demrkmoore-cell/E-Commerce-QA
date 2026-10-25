@@ -2,7 +2,7 @@
 
 [![Python API Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/python-api-tests.yml) [![Playwright UI Tests](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/playwright-ui-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/playwright-ui-tests.yml) [![Postman API Collection](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml/badge.svg)](https://github.com/demrkmoore-cell/E-Commerce-QA/actions/workflows/postman-api-tests.yml)
 
-End-to-end QA portfolio project for the public Demoblaze e-commerce application. Demonstrates structured test planning, manual testing, Jira defect reporting, REST API testing, Python API automation, GitHub Actions CI, SQL/backend validation planning, and browser UI automation with Playwright.
+End-to-end QA portfolio project for the public Demoblaze e-commerce application. Demonstrates structured test planning, manual testing, Jira defect reporting, REST API testing, Python API automation, GitHub Actions CI, documented SQL/backend validation approach, and browser UI automation with Playwright.
 
 ## Portfolio at a Glance
 
