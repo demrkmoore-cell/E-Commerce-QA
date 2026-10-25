@@ -15,7 +15,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 | API automation | 7-test Python/Pytest suite | ✅ Complete |
 | CI | GitHub Actions with HTML reporting | ✅ Complete |
 | Regression | Focused high-risk regression strategy | ✅ Complete |
-| SQL/backend | Validation planning | ✅ Documented |
+| SQL/backend | Documented validation approach (not an automated SQL test suite) | ✅ Documented |
 | UI automation | 10 browser tests plus 1 API-level regression test | ✅ Complete |
 
 ## Quick Navigation
@@ -55,7 +55,7 @@ End-to-end QA portfolio project for the public Demoblaze e-commerce application.
 - HTML automated test reporting
 - Response/status-code validation
 - Defect reporting and evidence management in Jira
-- SQL/backend validation planning
+- Documented SQL/backend validation approach; no automated SQL test suite is claimed
 - UI automation with Playwright and Chromium
 - Network interception and simulated backend-failure testing
 
