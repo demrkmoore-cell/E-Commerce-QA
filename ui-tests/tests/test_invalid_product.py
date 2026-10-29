@@ -1,11 +1,6 @@
-import pytest
 from playwright.sync_api import expect
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Known Demoblaze UI defect: invalid product data is rendered despite the API returning Not found. See bug-reports/INVALID-PRODUCT-UI.md",
-)
 def test_invalid_product_id_does_not_render_product_details(page):
     with page.expect_response(
         lambda response: response.url.endswith("/view")
